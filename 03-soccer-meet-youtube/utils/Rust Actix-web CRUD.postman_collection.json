@@ -1,0 +1,200 @@
+{
+	"info": {
+		"_postman_id": "da21cbc3-8ea0-4227-a2fb-e8ff05dcf518",
+		"name": "Rust Actix-web CRUD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6097804"
+	},
+	"item": [
+		{
+			"name": "Post game",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"field_name\": \"Roof Top\",\n    \"address\": \"333 NW Miami FL 25232\",\n    \"day\": \"Wed - 19:30\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/games/game",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"games",
+						"game"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Healthchecker",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"field_name\": \"Roof Top\",\n    \"address\": \"333 NW Miami FL 25232\",\n    \"day\": \"Wed - 19:30\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/healthchecker",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"healthchecker"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Games",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"field_name\": \"Roof Top\",\n    \"address\": \"333 NW Miami FL 25232\",\n    \"day\": \"Wed - 19:30\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/games",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"games"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Games By Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"field_name\": \"Roof Top\",\n    \"address\": \"333 NW Miami FL 25232\",\n    \"day\": \"Wed - 19:30\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/games/game/5e0f5439-d624-426f-84bd-632827e1f355",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"games",
+						"game",
+						"5e0f5439-d624-426f-84bd-632827e1f355"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Game By Id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"field_name\": \"Roof Top Updated\",\n    \"address\": \"333 NW Miami FL 25232 Updated\",\n    \"day\": \"Wed - 18:30\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/games/game/5e0f5439-d624-426f-84bd-632827e1f355",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"games",
+						"game",
+						"5e0f5439-d624-426f-84bd-632827e1f355"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Game",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"field_name\": \"Roof Top\",\n    \"address\": \"333 NW Miami FL 25232\",\n    \"day\": \"Wed - 19:30\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/games/game/ad758bb0-95e7-487e-aa77-9ff6d4f3d0db",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"games",
+						"game",
+						"ad758bb0-95e7-487e-aa77-9ff6d4f3d0db"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
