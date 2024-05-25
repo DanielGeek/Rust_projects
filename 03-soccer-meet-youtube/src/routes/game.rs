@@ -1,3 +1,11 @@
+use crate::models::game::{GameModel, CreateGameSchema, UpdateGameSchema};
+use crate::AppState;
+
+
+// TODO: check if I can delete this imports if also used somewhere else
+use actix_web::{get, post, put, web, HttpResponse, Responder, delete};
+use chrono::Utc;
+use serde_json::json;
 
 
 #[get("/games")]

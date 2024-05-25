@@ -21,6 +21,15 @@ install:
 build:
 	cargo build
 
+create_migrations:
+	sqlx migrate add -r init
+
+migrate-up:
+	sqlx migrate run
+
+migrate-down:
+	sqlx migrate revert
+
 stop_containers:
 	@echo "Stoping all docker containers..."
 	if [ $$(docker ps -q) ]; then \

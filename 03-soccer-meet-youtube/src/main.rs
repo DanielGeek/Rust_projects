@@ -1,14 +1,16 @@
 mod routes;
+mod models;
 
 use actix_cors::Cors;
 use actix_web::{HttpServer, middleware::Logger, App, http::header};
 use sqlx::{Postgres, Pool, postgres::PgPoolOptions};
 use dotenv::dotenv;
-use routes::{health_route::health_checker_handler};
+use routes::{health_route::health_checker_handler, config::config};
 
 pub struct AppState {
     db: Pool<Postgres>,
 }
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -51,7 +53,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(actix_web::web::Data::new(AppState {db: pool.clone()}))
             .service(health_checker_handler)
-            // .configure(config)
+            .configure(config)
             .wrap(cors)
             .wrap(Logger::default())
     })
