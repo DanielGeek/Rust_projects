@@ -1,4 +1,5 @@
-import { devices, defineConfig } from "@playwright/test";
+import type { PlaywrightTestConfig } from "@playwright/test";
+import { devices } from "@playwright/test";
 
 /**
  * Read environment variables from file.
@@ -9,7 +10,7 @@ import { devices, defineConfig } from "@playwright/test";
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig({
+const config: PlaywrightTestConfig = {
   testDir: "./tests",
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
@@ -101,4 +102,6 @@ export default defineConfig({
   //   command: 'npm run start',
   //   port: 3000,
   // },
-});
+};
+
+export default config;
