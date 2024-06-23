@@ -15,7 +15,7 @@ async fn main() -> std::io::Result<()> {
     use actix_web::*;
     use leptos::*;
     use leptos_actix::{generate_route_list, LeptosRoutes};
-    use rusty_llama::app::*;
+    use chatbot_rust::app::*;
 
     let conf = get_configuration(None).await.unwrap();
     let addr = conf.leptos_options.site_addr;
@@ -96,7 +96,7 @@ pub fn main() {
     // prefer using `cargo leptos serve` instead
     // to run: `trunk serve --open --features ssg`
     use leptos::*;
-    use rusty_llama::app::*;
+    use chatbot_rust::app::*;
     use wasm_bindgen::prelude::wasm_bindgen;
 
     console_error_panic_hook::set_once();

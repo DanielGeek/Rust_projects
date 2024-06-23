@@ -564,6 +564,32 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "chatbot-rust"
+version = "0.1.0"
+dependencies = [
+ "actix-files",
+ "actix-rt",
+ "actix-web",
+ "actix-ws",
+ "cfg-if",
+ "console_error_panic_hook",
+ "dotenv",
+ "env_logger",
+ "futures",
+ "gloo-net 0.4.0",
+ "leptos",
+ "leptos_actix",
+ "leptos_meta",
+ "leptos_router",
+ "llm",
+ "rand",
+ "serde",
+ "tokio",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "ciborium"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2625,32 +2651,6 @@ dependencies = [
  "libc",
  "linux-raw-sys",
  "windows-sys 0.52.0",
-]
-
-[[package]]
-name = "rusty_llama"
-version = "0.1.0"
-dependencies = [
- "actix-files",
- "actix-rt",
- "actix-web",
- "actix-ws",
- "cfg-if",
- "console_error_panic_hook",
- "dotenv",
- "env_logger",
- "futures",
- "gloo-net 0.4.0",
- "leptos",
- "leptos_actix",
- "leptos_meta",
- "leptos_router",
- "llm",
- "rand",
- "serde",
- "tokio",
- "wasm-bindgen",
- "web-sys",
 ]
 
 [[package]]
