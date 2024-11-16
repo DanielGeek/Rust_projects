@@ -40,4 +40,19 @@ impl Circuit {
     self.outputs.push(value);
   }
 
+  // Apply the hash function, defaulting to a simple operation if none is provided
+  pub fn apply_hash(&self, a: &BigInt, b: &BigInt) -> BigInt {
+    if let Some(ref hash_function) = self.hash_function {
+      hash_function.hash(a, b)
+    } else {
+      // Default behavior if no hash function is provided
+      a + b // Example fallback hash; use a simple operation or return an error as needed
+    }
+  }
+
+  // Retrieves an input value by index, if it exists
+  pub fn get_input(&self, index: usize) -> Option<&BigInt> {
+    self.inputs.get(index)
+  }
+
 }
