@@ -4,12 +4,16 @@
 ## example calling with grpcurl
 
 ```
-cargo run
+cargo run --bin server
+```
+```
+cargo run --bin client
 ```
 
 ```
 cd server
 ```
+## Sum
 ```
 grpcurl -plaintext \
   -proto proto/calculator.proto \
@@ -17,6 +21,15 @@ grpcurl -plaintext \
   -d '{"a": 2, "b": 3}' \
   '[::1]:50051' \
   calculator.Calculator.Add
+```
+## Divide
+```
+grpcurl -plaintext \
+  -proto proto/calculator.proto \
+  -import-path proto \
+  -d '{"a": 2, "b": 2}' \
+  '[::1]:50051' \
+  calculator.Calculator.Divide
 ```
 
 ## using reflection
