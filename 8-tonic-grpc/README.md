@@ -31,6 +31,10 @@ grpcurl -plaintext \
   '[::1]:50051' \
   calculator.Calculator.Divide
 ```
+## Admin Counter
+```
+grpcurl -emit-defaults -plaintext '[::1]:50051' calculator.Admin.GetRequestCount
+```
 
 ## using reflection
 ```
