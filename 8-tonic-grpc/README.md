@@ -31,9 +31,13 @@ grpcurl -plaintext \
   '[::1]:50051' \
   calculator.Calculator.Divide
 ```
-## Admin Counter
+## Admin Counter without token
 ```
 grpcurl -emit-defaults -plaintext '[::1]:50051' calculator.Admin.GetRequestCount
+```
+## Admin Counter with token
+```
+grpcurl -H "Authorization: Bearer some-secret-token" -emit-defaults -plaintext '[::1]:50051' calculator.Admin GetRequestCount
 ```
 
 ## using reflection
