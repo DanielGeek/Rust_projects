@@ -1,12 +1,29 @@
-use rust_bert::pipelines::{common::ModelType, translation::{Language, TranslationModelBuilder}};
+use rust_bert::pipelines::{common::ModelType, pos_tagging::POSModel, translation::{Language, TranslationModelBuilder}};
 use tch::Device;
 
 
 
 fn main() {
-  translation();
+  pos();
+  // translation();
 }
 
+
+// Parts of Speech model function
+fn pos() {
+  let pos_model = POSModel::new(Default::default())
+      .unwrap();
+
+  let input = ["Hello, How are you doing?"];
+
+  let output = pos_model.predict(&input);
+
+  for (pos, tag) in output[0].iter().enumerate() {
+    println!("{pos} - {tag:?}");
+  }
+}
+
+// Translation model function
 fn translation() {
   let model = TranslationModelBuilder::new()
       .with_device(Device::cuda_if_available())
