@@ -1,13 +1,39 @@
-use rust_bert::pipelines::{common::ModelType, keywords_extraction::{KeywordExtractionConfig, KeywordExtractionModel, KeywordScorerType}, pos_tagging::POSModel, sentence_embeddings::{SentenceEmbeddingsConfig, SentenceEmbeddingsModelType}, sentiment::SentimentModel, translation::{Language, TranslationModelBuilder}};
+use std::fmt::format;
+
+use rust_bert::pipelines::{common::ModelType, keywords_extraction::{KeywordExtractionConfig, KeywordExtractionModel, KeywordScorerType}, pos_tagging::POSModel, sentence_embeddings::{SentenceEmbeddingsConfig, SentenceEmbeddingsModelType}, sentiment::SentimentModel, translation::{Language, TranslationModelBuilder}, zero_shot_classification::ZeroShotClassificationModel};
 use tch::Device;
 
 
 
 fn main() {
-  keyword_extraction();
+  text_classification();
+  // keyword_extraction();
   // sentimental_analysis();
   // pos();
   // translation();
+}
+
+// Text Classification function
+fn text_classification() {
+  let classification_model =
+    ZeroShotClassificationModel::new(Default::default()).unwrap();
+
+  let input1 = "Which sports do you play?";
+  let input2 = "Who is the prime minister of your country?";
+
+  let candidate_labels = &["politics", "sports", "public health", "drama", "universe"];
+
+  let output = classification_model
+    .predict_multilabel(
+      [input1, input2],
+      candidate_labels,
+      Some(Box::new(|label: &str| {
+        format!("Example is about {label}")
+      })),
+      128
+    ).unwrap();
+  
+  println!("{output:?}");
 }
 
 // Keyword Extraction function
