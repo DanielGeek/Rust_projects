@@ -1,16 +1,55 @@
-use std::fmt::format;
-
-use rust_bert::pipelines::{common::ModelType, keywords_extraction::{KeywordExtractionConfig, KeywordExtractionModel, KeywordScorerType}, pos_tagging::POSModel, sentence_embeddings::{SentenceEmbeddingsConfig, SentenceEmbeddingsModelType}, sentiment::SentimentModel, translation::{Language, TranslationModelBuilder}, zero_shot_classification::ZeroShotClassificationModel};
+use rust_bert::{bart::{BartConfigResources, BartMergesResources, BartModelResources, BartVocabResources}, pipelines::{common::{ModelResource, ModelType}, keywords_extraction::{KeywordExtractionConfig, KeywordExtractionModel, KeywordScorerType}, pos_tagging::POSModel, sentence_embeddings::{SentenceEmbeddingsConfig, SentenceEmbeddingsModelType}, sentiment::SentimentModel, summarization::{SummarizationConfig, SummarizationModel}, translation::{Language, TranslationModelBuilder}, zero_shot_classification::ZeroShotClassificationModel}, resources::RemoteResource};
 use tch::Device;
 
 
 
 fn main() {
-  text_classification();
+  summarization();
+  // text_classification();
   // keyword_extraction();
   // sentimental_analysis();
   // pos();
   // translation();
+}
+
+// Summarization function
+fn summarization() {
+  let config_resource = Box::new(RemoteResource::from_pretrained(
+    BartConfigResources::DISTILBART_CNN_6_6
+  ));
+
+  let vocab_resource = Box::new(RemoteResource::from_pretrained(
+    BartVocabResources::DISTILBART_CNN_6_6
+  ));
+
+  let merges_resource = Box::new(RemoteResource::from_pretrained(
+    BartMergesResources::DISTILBART_CNN_6_6
+  ));
+
+  let model_resource = Box::new(RemoteResource::from_pretrained(
+    BartModelResources::DISTILBART_CNN_6_6
+  ));
+
+  let summarization_config = SummarizationConfig {
+    model_resource: ModelResource::Torch(model_resource),
+    config_resource,
+    vocab_resource,
+    merges_resource: Some(merges_resource),
+    num_beams: 1,
+    length_penalty: 1.0,
+    min_length: 56,
+    max_length: Some(200),
+    device: Device::Cpu,
+    ..Default::default()
+  };
+
+  let summarization_model = SummarizationModel::new(summarization_config).unwrap();
+
+  let input = ["K2-18b, also known as EPIC 201912552 b, is an exoplanet orbiting the red dwarf K2-18, located 124 light-years (38 pc) away from Earth. The planet is a sub-Neptune about 2.6 times the radius of Earth, with a 33-day orbit within the star's habitable zone. This means it receives about a similar amount of starlight as the Earth receives from the Sun. Initially discovered with the Kepler space telescope, it was later observed by the James Webb Space Telescope (JWST) in order to study the planet's atmosphere."];
+  
+  let output = summarization_model.summarize(&input).unwrap();
+
+  println!("{:?}", output[0]);
 }
 
 // Text Classification function
