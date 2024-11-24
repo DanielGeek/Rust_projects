@@ -1,13 +1,31 @@
-use rust_bert::pipelines::{common::ModelType, pos_tagging::POSModel, translation::{Language, TranslationModelBuilder}};
+use rust_bert::pipelines::{common::ModelType, pos_tagging::POSModel, sentiment::SentimentModel, translation::{Language, TranslationModelBuilder}};
 use tch::Device;
 
 
 
 fn main() {
-  pos();
+  sentimental_analysis();
+  // pos();
   // translation();
 }
 
+
+// Sentimental Analysis function
+fn sentimental_analysis() {
+  let sentimental_classifier =
+      SentimentModel::new(Default::default()).unwrap();
+
+  let input = [
+    "This movie is the worst i have seen",
+    "This is the best youtube channel for rust programming language"
+  ];
+
+  let output = sentimental_classifier.predict(input);
+
+  for sentiment in output {
+    println!("{sentiment:?}");
+  }
+}
 
 // Parts of Speech model function
 fn pos() {
