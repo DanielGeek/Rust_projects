@@ -1,14 +1,38 @@
-use rust_bert::pipelines::{common::ModelType, pos_tagging::POSModel, sentiment::SentimentModel, translation::{Language, TranslationModelBuilder}};
+use rust_bert::pipelines::{common::ModelType, keywords_extraction::{KeywordExtractionConfig, KeywordExtractionModel, KeywordScorerType}, pos_tagging::POSModel, sentence_embeddings::{SentenceEmbeddingsConfig, SentenceEmbeddingsModelType}, sentiment::SentimentModel, translation::{Language, TranslationModelBuilder}};
 use tch::Device;
 
 
 
 fn main() {
-  sentimental_analysis();
+  keyword_extraction();
+  // sentimental_analysis();
   // pos();
   // translation();
 }
 
+// Keyword Extraction function
+fn keyword_extraction() {
+  let keyword_extraction_config = KeywordExtractionConfig {
+    sentence_embeddings_config: SentenceEmbeddingsConfig::from(
+      SentenceEmbeddingsModelType::AllMiniLmL6V2
+    ),
+    scorer_type: KeywordScorerType::MaxSum,
+    ngram_range: (1, 1),
+    num_keywords: 5,
+    ..Default::default()
+  };
+
+  let keyword_extraction_model =
+    KeywordExtractionModel::new(keyword_extraction_config).unwrap();
+
+  let input = "The universe is all of space and time and their contents. It comprises all of existence, any fundamental interaction, physical process and physical constant, and therefore all forms of matter and energy, and the structures they form, from sub-atomic particles to entire galactic filaments. Since the early 20th century, the field of cosmology establishes that space and time emerged together at the Big Bang 13.787±0.020 billion years ago and that the universe has been expanding since then. The portion of the universe that we can see is approximately 93 billion light-years in diameter at present, but the total size of the universe is not known";
+
+  let keywords = keyword_extraction_model.predict(&[input]).unwrap();
+
+  for keyword in keywords[0].iter() {
+    println!("{:?}, {:?}", keyword.text, keyword.score)
+  }
+}
 
 // Sentimental Analysis function
 fn sentimental_analysis() {
