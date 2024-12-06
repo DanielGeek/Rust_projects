@@ -1,8 +1,8 @@
-use num_bigint::BigInt;
-use serde::{Serialize, Deserialize};
-use std::collections::HashMap;
-use num_traits::Zero;
 use crate::field::FieldElement;
+use num_bigint::BigInt;
+use num_traits::Zero;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Variable {
@@ -31,15 +31,33 @@ impl QAP {
         }
     }
 
-    pub fn add_constraint(&mut self, left_coeffs: &[(usize, FieldElement)], right_coeffs: &[(usize, FieldElement)], output_coeffs: &[(usize, FieldElement)], _modulus: &BigInt) {
+    pub fn add_constraint(
+        &mut self,
+        left_coeffs: &[(usize, FieldElement)],
+        right_coeffs: &[(usize, FieldElement)],
+        output_coeffs: &[(usize, FieldElement)],
+        _modulus: &BigInt,
+    ) {
         for (index, coeff) in left_coeffs {
-            *self.left.coefficients.entry(*index).or_insert(FieldElement::new(BigInt::zero())) += coeff.clone();
+            *self
+                .left
+                .coefficients
+                .entry(*index)
+                .or_insert(FieldElement::new(BigInt::zero())) += coeff.clone();
         }
         for (index, coeff) in right_coeffs {
-            *self.right.coefficients.entry(*index).or_insert(FieldElement::new(BigInt::zero())) += coeff.clone();
+            *self
+                .right
+                .coefficients
+                .entry(*index)
+                .or_insert(FieldElement::new(BigInt::zero())) += coeff.clone();
         }
         for (index, coeff) in output_coeffs {
-            *self.output.coefficients.entry(*index).or_insert(FieldElement::new(BigInt::zero())) += coeff.clone();
+            *self
+                .output
+                .coefficients
+                .entry(*index)
+                .or_insert(FieldElement::new(BigInt::zero())) += coeff.clone();
         }
     }
 
@@ -55,7 +73,9 @@ impl QAP {
 
 impl Polynomial {
     pub fn new() -> Self {
-        Polynomial { coefficients: HashMap::new() }
+        Polynomial {
+            coefficients: HashMap::new(),
+        }
     }
 
     pub fn add_term(&mut self, index: usize, coefficient: FieldElement) {
@@ -95,7 +115,10 @@ impl Polynomial {
 
             // Add L_i(x) * y_i to the result
             for (index, coeff) in term.iter() {
-                *result.coefficients.entry(*index).or_insert(FieldElement::new(BigInt::zero())) += coeff.clone();
+                *result
+                    .coefficients
+                    .entry(*index)
+                    .or_insert(FieldElement::new(BigInt::zero())) += coeff.clone();
             }
         }
 
