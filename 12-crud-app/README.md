@@ -1,5 +1,21 @@
 # CRUD App with Rust tokio, axum, Postgres SQL, Docker and Kubernetes
 
+## Run project
+```
+cargo run
+```
+
+## Config docker
+```
+sudo docker build . -t crud:latest
+```
+
+## Run docker container
+```
+cd docker
+docker compose up
+```f
+
 ## Methods
 - POST example Body JSON
 - PATH: http://localhost:3000/user

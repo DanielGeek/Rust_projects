@@ -1,6 +1,8 @@
-use crate::model::{User, UserInfo};
-use sqlx::postgres::PgPoolOptions;
+use std::env;
+use dotenv::dotenv;
 use sqlx::{Error, PgPool};
+use sqlx::postgres::PgPoolOptions;
+use crate::model::{User, UserInfo};
 
 #[derive(Clone)]
 pub struct UserService {
@@ -9,9 +11,13 @@ pub struct UserService {
 
 impl UserService {
     pub async fn new() -> Result<Self, Error> {
+        dotenv().ok();
+        let url = env::var("DATABASE_URL")
+            .expect("Expected Database URL...!");
+
         let pool = PgPoolOptions::new()
             .max_connections(5)
-            .connect("postgresql://postgres@localhost/postgres")
+            .connect(&url)
             .await?;
 
         Ok(Self { pool })
