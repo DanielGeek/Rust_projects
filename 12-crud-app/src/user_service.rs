@@ -1,9 +1,10 @@
-use sqlx::{Error, PgPool};
-use sqlx::postgres::PgPoolOptions;
 use crate::model::{User, UserInfo};
+use sqlx::postgres::PgPoolOptions;
+use sqlx::{Error, PgPool};
 
+#[derive(Clone)]
 pub struct UserService {
-    pool: PgPool
+    pool: PgPool,
 }
 
 impl UserService {
@@ -12,21 +13,24 @@ impl UserService {
             .max_connections(5)
             .connect("postgresql://postgres@localhost/postgres")
             .await?;
-        Ok(Self, {pool})
+        Ok(Self, { pool })
     }
 
     pub async fn list_users(&self) -> Result<Vec<User>, Error> {
-        let users = sqlx::query_as::<_, User>("SELECT id, name, occupation, email, phone FROM users")
-            .fetch_all(&self.pool)
-            .await?;
+        let users =
+            sqlx::query_as::<_, User>("SELECT id, name, occupation, email, phone FROM users")
+                .fetch_all(&self.pool)
+                .await?;
         Ok(users)
     }
 
     pub async fn get_users_by_id(&self, id: i32) -> Result<User, Error> {
-        let user = sqlx::query_as::<_, User>("SELECT id, name, occupation, email, phone FROM users WHERE id = $1")
-            .bind(id)
-            .fetch_one(&self.pool)
-            .await?;
+        let user = sqlx::query_as::<_, User>(
+            "SELECT id, name, occupation, email, phone FROM users WHERE id = $1",
+        )
+        .bind(id)
+        .fetch_one(&self.pool)
+        .await?;
         Ok(user)
     }
 
@@ -42,14 +46,16 @@ impl UserService {
     }
 
     pub async fn update_user(&self, id: u64, user: UserInfo) -> Result<(), Error> {
-        sqlx::query("UPDATE users SET name = $1, occupation = $2, email = $3, phone = $4 WHERE id = $5")
-            .bind(user.name)
-            .bind(user.occupation)
-            .bind(user.email)
-            .bind(user.phone)
-            .bind(id)
-            .execute(&self.pool)
-            .await?;
+        sqlx::query(
+            "UPDATE users SET name = $1, occupation = $2, email = $3, phone = $4 WHERE id = $5",
+        )
+        .bind(user.name)
+        .bind(user.occupation)
+        .bind(user.email)
+        .bind(user.phone)
+        .bind(id)
+        .execute(&self.pool)
+        .await?;
         Ok(())
     }
 
