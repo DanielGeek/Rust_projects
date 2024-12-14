@@ -253,3 +253,92 @@ mod step5 {
         }
     }
 }
+
+mod step6 {
+
+    macro_rules! Singleton {
+        ($t: ty, $name: ident, $e: expr) => {
+            pub mod $name {
+                use std::mem::MaybeUninit;
+                use std::sync::{Mutex, Once};
+
+                static SINGLETON: Mutex<MaybeUninit<Singleton>> = Mutex::new(MaybeUninit::uninit());
+                static ONCE: Once = Once::new();
+                static INIT: fn() -> $t = $e;
+
+                pub struct Singleton {
+                    inner: Mutex<$t>,
+                }
+
+                impl Singleton {
+                    pub fn inner(&self) -> &Mutex<$t> {
+                        &self.inner
+                    }
+                }
+
+                pub fn instance() -> &'static Singleton {
+                    ONCE.call_once(|| {
+                        let init = INIT;
+                        let value = init();
+
+                        let singleton = Singleton {
+                            inner: Mutex::new(value),
+                        };
+
+                        let mut lock = SINGLETON.lock().unwrap();
+                        lock.write(singleton);
+                    });
+
+                    let lock = SINGLETON.lock().unwrap();
+                    unsafe { &*lock.as_ptr() }
+                }
+            }
+        };
+    }
+
+    #[cfg(test)]
+    mod tests {
+        Singleton!(u32, singletonu32, || 42);
+        Singleton!(u64, singletonu64, || 42);
+        Singleton!(f64, singletonf64, || 42.);
+
+        #[test]
+        fn singleton() {
+            let instance1 = singletonu32::instance();
+            let instance2 = singletonu32::instance();
+
+            assert_eq!(*instance1.inner().lock().unwrap(), 42);
+            assert_eq!(*instance2.inner().lock().unwrap(), 42);
+
+            *instance1.inner().lock().unwrap() = 24;
+
+            assert_eq!(*instance2.inner().lock().unwrap(), 24);
+
+            *instance2.inner().lock().unwrap() = 142;
+
+            assert_eq!(*instance1.inner().lock().unwrap(), 142);
+        }
+
+        #[test]
+        fn singleton_multi_instance() {
+            let instance1 = singletonu64::instance();
+            let instance2 = singletonu64::instance();
+            let instance3 = singletonf64::instance();
+
+            assert_eq!(*instance1.inner().lock().unwrap(), 42);
+            assert_eq!(*instance2.inner().lock().unwrap(), 42);
+            assert_eq!(*instance3.inner().lock().unwrap(), 42.);
+
+            *instance3.inner().lock().unwrap() = 24.;
+            *instance1.inner().lock().unwrap() = 24;
+
+            assert_eq!(*instance2.inner().lock().unwrap(), 24);
+
+            *instance2.inner().lock().unwrap() = 142;
+
+            assert_eq!(*instance1.inner().lock().unwrap(), 142);
+            assert_eq!(*instance2.inner().lock().unwrap(), 142);
+            assert_eq!(*instance3.inner().lock().unwrap(), 24.);
+        }
+    }
+}
