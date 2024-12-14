@@ -183,3 +183,73 @@ mod step4 {
         }
     }
 }
+
+mod step5 {
+    use std::mem::MaybeUninit;
+    use std::sync::{Mutex, Once};
+
+    pub static SINGLETON: Mutex<MaybeUninit<Singleton>> = Mutex::new(MaybeUninit::uninit());
+    pub static ONCE: Once = Once::new();
+    pub static INIT: Mutex<Option<fn() -> u32>> = Mutex::new(None);
+
+    pub struct Singleton {
+        inner: Mutex<u32>,
+    }
+
+    impl Singleton {
+        pub fn set_initializer(initializer: fn() -> u32) {
+            let mut init_lock = INIT.lock().unwrap();
+            *init_lock = Some(initializer);
+        }
+
+        pub fn instance() -> &'static Singleton {
+            ONCE.call_once(|| {
+                let init = {
+                    let init_lock = INIT.lock().unwrap();
+                    if let Some(init_fn) = *init_lock {
+                        init_fn
+                    } else {
+                        panic!("Singleton must be initialized before it is used.");
+                    }
+                };
+
+                let value = init();
+
+                let singleton = Singleton {
+                    inner: Mutex::new(value),
+                };
+
+                let mut singleton_lock = SINGLETON.lock().unwrap();
+                singleton_lock.write(singleton);
+            });
+
+            unsafe {
+                &*SINGLETON.lock().unwrap().as_ptr()
+            }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn singleton() {
+            Singleton::set_initializer(|| 42);
+
+            let instance1 = Singleton::instance();
+            let instance2 = Singleton::instance();
+
+            assert_eq!(*instance1.inner.lock().unwrap(), 42);
+            assert_eq!(*instance2.inner.lock().unwrap(), 42);
+
+            *instance1.inner.lock().unwrap() = 24;
+
+            assert_eq!(*instance2.inner.lock().unwrap(), 24);
+
+            *instance2.inner.lock().unwrap() = 142;
+
+            assert_eq!(*instance1.inner.lock().unwrap(), 142);
+        }
+    }
+}
