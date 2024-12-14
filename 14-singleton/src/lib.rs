@@ -123,3 +123,63 @@ mod step3 {
         }
     }
 }
+
+mod step4 {
+    use std::mem::MaybeUninit;
+    use std::sync::{Mutex, Once};
+
+    pub static SINGLETON: Mutex<MaybeUninit<Singleton>> = Mutex::new(MaybeUninit::uninit());
+    pub static ONCE: Once = Once::new();
+    pub static INIT: Mutex<Option<fn() -> u32>> = Mutex::new(None);
+
+    pub struct Singleton {
+        inner: u32,
+    }
+
+    pub fn set_initializer(initializer: fn() -> u32) {
+        let mut init_lock = INIT.lock().unwrap();
+        *init_lock = Some(initializer);
+    }
+
+    pub fn instance() -> &'static mut u32 {
+        ONCE.call_once(|| {
+            let init = {
+                let init_lock = INIT.lock().unwrap();
+                if let Some(init_fn) = *init_lock {
+                    init_fn
+                } else {
+                    panic!("Singleton must be initialized before it is used.");
+                }
+            };
+
+            let value = init();
+            let singleton = Singleton { inner: value };
+
+            let mut singleton_lock = SINGLETON.lock().unwrap();
+            singleton_lock.write(singleton);
+        });
+
+        let mut singleton_lock = SINGLETON.lock().unwrap();
+        let singleton_ptr = singleton_lock.as_mut_ptr();
+        unsafe { &mut (*singleton_ptr).inner }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn singleton() {
+            set_initializer(|| 42);
+
+            let instance1 = instance();
+            let instance2 = instance();
+
+            assert_eq!(*instance1, *instance2);
+
+            *instance1 = 24;
+
+            assert_eq!(*instance1, *instance2);
+        }
+    }
+}
