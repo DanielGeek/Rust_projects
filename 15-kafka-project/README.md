@@ -5,3 +5,8 @@
 docker compose up
 docker ps
 ```
+
+## Test program
+```
+cargo run
+```
