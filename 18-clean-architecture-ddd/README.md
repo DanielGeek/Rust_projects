@@ -17,4 +17,5 @@ cargo install diesel_cli --no-default-features --features postgres
 diesel --version
 diesel setup(delete the initial setup)
 diesel migration generate create_user > /dev/null 2>&1
+diesel migration run (After created table)
 ```
