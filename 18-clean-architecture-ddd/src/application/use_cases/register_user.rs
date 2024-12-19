@@ -1,5 +1,6 @@
 use crate::domain::repositories::user_repository::UserRepository;
 use crate::domain::services::user_service::UserService;
+use crate::presentation::handlers::user_handler::NewUser;
 
 pub struct RegisterUserUseCase<T: UserRepository> {
     user_service: UserService<T>

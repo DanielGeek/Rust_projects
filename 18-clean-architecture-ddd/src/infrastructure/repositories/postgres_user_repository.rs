@@ -5,6 +5,7 @@ use diesel::result::Error;
 use crate::domain::entities::user::User;
 use crate::domain::repositories::user_repository::UserRepository;
 use crate::infrastructure::db::connection::{DBPool, establish_connection};
+use crate::presentation::handlers::user_handler::NewUser;
 use crate::schema;
 use crate::schema::users::dsl::users;
 use crate::schema::users::users;

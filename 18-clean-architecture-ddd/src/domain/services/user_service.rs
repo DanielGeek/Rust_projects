@@ -1,5 +1,6 @@
 use crate::domain::entities::user::User;
 use crate::domain::repositories::user_repository::UserRepository;
+use crate::presentation::handlers::user_handler::NewUser;
 
 #[derive(Clone)]
 pub struct UserService<T: UserRepository> {
