@@ -4,7 +4,7 @@ diesel::table! {
     users (id) {
         id -> Int4,
         name -> Varchar,
-        email -> Nullable<Varchar>,
+        email -> Varchar,
         phone -> Varchar,
         address -> Varchar,
     }
