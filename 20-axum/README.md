@@ -7,6 +7,8 @@ Axum is a backend API framework for Rust. It's written by the same team that mak
 cargo watch -x run
 cargo doc
 cargo doc --open
+cargo add serde@1.0.147
+cargo add serde@1.0.147 -F derive
 ```
 
 
@@ -36,8 +38,8 @@ cargo doc --open
     - [x] ***handling HTTP methods***
   - [x] ***Create an extractor to get a string from the body***
     - [x] ***Extracting string from body***
-  - [ ] ***Create an extractor to get JSON from the body***
-    - [ ] ***Receiving JSON in a Post***
+  - [x] ***Create an extractor to get JSON from the body***
+    - [x] ***Receiving JSON in a Post***
   - [ ] ***Create an extractor to get a path variable from a request***
     - [ ] ***Handling path variables***
   - [ ] ***Create an extractor to get query parameters***
