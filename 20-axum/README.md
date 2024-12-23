@@ -24,18 +24,18 @@ cargo doc --open
       - Fast development time (once you familiar with the framework / language)
       - Fun
 - [x] *Hello world*
-  - [x] *Spin up a hello world server*
+  - [x] *Spin up a hello world server*f
     - [x] ***Installing Rust (cancelled)***
     - [x] *Using the course repo*
     - [x] ***Setting up VS Code***
     - [x] ***Create hello world Axum server***
     - [x] ***Auto restart the server***
     - [x] ***Open the documentation***
-- [ ] Routing
-  - [ ] ***Create a router to handle http methods***
-    - [ ] ***handling HTTP methods***
-  - [ ] ***Create an extractor to get a string from the body***
-    - [ ] ***Extracting string from body***
+- [x] Routing
+  - [x] ***Create a router to handle http methods***
+    - [x] ***handling HTTP methods***
+  - [x] ***Create an extractor to get a string from the body***
+    - [x] ***Extracting string from body***
   - [ ] ***Create an extractor to get JSON from the body***
     - [ ] ***Receiving JSON in a Post***
   - [ ] ***Create an extractor to get a path variable from a request***
