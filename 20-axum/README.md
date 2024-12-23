@@ -2,6 +2,14 @@
 
 Axum is a backend API framework for Rust. It's written by the same team that makes Tokio.rs and therefore is 100% compatible with Tokio. It's meant to be easy to get started with but powerful enough to run your project on.
 
+## Help commands
+```bash
+cargo watch -x run
+cargo doc
+cargo doc --open
+```
+
+
 **Legend**
 
 - [ ] Unit
@@ -15,14 +23,14 @@ Axum is a backend API framework for Rust. It's written by the same team that mak
         - package manager
       - Fast development time (once you familiar with the framework / language)
       - Fun
-- [ ] *Hello world*
-  - [ ] *Spin up a hello world server*
-    - [ ] ***Installing Rust (cancelled)***
-    - [ ] *Using the course repo*
-    - [ ] ***Setting up VS Code***
-    - [ ] ***Create hello world Axum server***
-    - [ ] ***Auto restart the server***
-    - [ ] ***Open the documentation***
+- [x] *Hello world*
+  - [x] *Spin up a hello world server*
+    - [x] ***Installing Rust (cancelled)***
+    - [x] *Using the course repo*
+    - [x] ***Setting up VS Code***
+    - [x] ***Create hello world Axum server***
+    - [x] ***Auto restart the server***
+    - [x] ***Open the documentation***
 - [ ] Routing
   - [ ] ***Create a router to handle http methods***
     - [ ] ***handling HTTP methods***
