@@ -1,5 +1,5 @@
 use axum::{extract::Query, Json};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct QueryParams {
