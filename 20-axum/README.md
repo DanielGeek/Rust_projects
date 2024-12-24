@@ -40,10 +40,10 @@ cargo add serde@1.0.147 -F derive
     - [x] ***Extracting string from body***
   - [x] ***Create an extractor to get JSON from the body***
     - [x] ***Receiving JSON in a Post***
-  - [ ] ***Create an extractor to get a path variable from a request***
-    - [ ] ***Handling path variables***
-  - [ ] ***Create an extractor to get query parameters***
-    - [ ] ***Handling query params***
+  - [x] ***Create an extractor to get a path variable from a request***
+    - [x] ***Handling path variables***
+  - [x] ***Create an extractor to get query parameters***
+    - [x] ***Handling query params***
   - [ ] ***Create an extractor to get the headers***
     - [ ] ***Extracting the User Agent Header***
     - [ ] ***Extracting a Custom Header***
