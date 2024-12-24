@@ -46,7 +46,7 @@ cargo add serde@1.0.147 -F derive
     - [x] ***Handling query params***
   - [x] ***Create an extractor to get the headers***
     - [x] ***Extracting the User Agent Header***
-    - [ ] ***Extracting a Custom Header***
+    - [x] ***Extracting a Custom Header***
   - [ ] ***Apply middleware to routes***
     - [ ] ***Set CORS headers***
     - [ ] ***Using layers to share data between routes***
