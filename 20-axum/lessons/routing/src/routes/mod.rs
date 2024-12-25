@@ -8,6 +8,7 @@ mod mirror_user_agent;
 mod path_variables;
 mod query_params;
 mod read_middleware_custom_header;
+mod returns_201;
 mod set_middleware_custom_header;
 
 use axum::{
@@ -23,6 +24,7 @@ use mirror_user_agent::mirror_user_agent;
 use path_variables::{path_variables, hard_coded_path};
 use query_params::query_params;
 use read_middleware_custom_header::read_middleware_custom_header;
+use returns_201::returns_201;
 use set_middleware_custom_header::set_middleware_custom_header;
 use tower_http::cors::{Any, CorsLayer};
 
@@ -54,4 +56,5 @@ pub fn create_routes() -> Router<Body> {
         .layer(Extension(shared_data))
         .layer(cors)
         .route("/always_errors", get(always_errors))
+        .route("/returns_201", post(returns_201))
 }
