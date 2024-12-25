@@ -14,7 +14,10 @@ pub async fn set_middleware_custom_header<B>(
     let message = headers
         .get("message")
         .ok_or_else(|| StatusCode::BAD_REQUEST)?;
-    let message = message.to_str().map_err(|_error| StatusCode::BAD_REQUEST)?.to_owned();
+    let message = message
+        .to_str()
+        .map_err(|_error| StatusCode::BAD_REQUEST)?
+        .to_owned();
     let extension = request.extensions_mut();
 
     extension.insert(HeaderMessage(message));

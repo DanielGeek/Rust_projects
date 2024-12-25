@@ -56,7 +56,7 @@ cargo add serde@1.0.147 -F derive
       - New version of Axum will change how middleware works
       - WARNING: Derive Clone on struct being added to Extensions
   - [ ] ***Return the appropriate status code and message when erroring***
-    - [ ] ***Returning error status codes***
+    - [x] ***Returning error status codes***
     - [ ] ***Returning success status codes***
   - [ ] ***Return JSON data***
     - [ ] ***Respond with JSON data***
