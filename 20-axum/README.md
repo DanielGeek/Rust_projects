@@ -60,9 +60,9 @@ cargo add serde@1.0.147 -F derive
     - [x] ***Returning success status codes***
   - [x] ***Return JSON data***
     - [x] ***Respond with JSON data***
-  - [ ] ***Validate incoming data***
+  - [x] ***Validate incoming data***
     - [x] ***Validating JSON with Serde***
-    - [ ] ***Custom Extractor with Validation***
+    - [x] ***Custom Extractor with Validation***
 - [ ] Data
   - [ ] ***Creating a database***
     - [ ] ***Set up a local database with Docker***

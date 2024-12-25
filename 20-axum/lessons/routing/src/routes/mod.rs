@@ -1,4 +1,5 @@
 mod always_errors;
+mod custom_json_extractor;
 mod get_json;
 mod hello_world;
 mod middleware_message;
@@ -17,6 +18,7 @@ use axum::{
     body::Body, http::Method, middleware, routing::{get, patch, post}, Extension, Router
 };
 use always_errors::always_errors;
+use custom_json_extractor::custom_json_extractor;
 use get_json::get_json;
 use hello_world::hello_world;
 use middleware_message::middleware_message;
@@ -63,4 +65,5 @@ pub fn create_routes() -> Router<Body> {
         .route("/returns_201", post(returns_201))
         .route("/get_json", get(get_json))
         .route("/validate_data", post(validate_with_serde))
+        .route("/custom_json_extractor", post(custom_json_extractor))
 }
