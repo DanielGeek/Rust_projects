@@ -48,8 +48,8 @@ cargo add serde@1.0.147 -F derive
     - [x] ***Extracting the User Agent Header***
     - [x] ***Extracting a Custom Header***
   - [ ] ***Apply middleware to routes***
-    - [ ] ***Set CORS headers***
-    - [ ] ***Using layers to share data between routes***
+    - [x] ***Set CORS headers***
+    - [x] ***Using layers to share data between routes***
     - [ ] ***Creating middleware function***
       - Explore creating custom middleware again
       - During recording state that versions are very important
