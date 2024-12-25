@@ -11,6 +11,7 @@ mod query_params;
 mod read_middleware_custom_header;
 mod returns_201;
 mod set_middleware_custom_header;
+mod validate_with_serde;
 
 use axum::{
     body::Body, http::Method, middleware, routing::{get, patch, post}, Extension, Router
@@ -29,6 +30,7 @@ use read_middleware_custom_header::read_middleware_custom_header;
 use returns_201::returns_201;
 use set_middleware_custom_header::set_middleware_custom_header;
 use tower_http::cors::{Any, CorsLayer};
+use validate_with_serde::validate_with_serde;
 
 #[derive(Clone)]
 pub struct SharedData {
@@ -60,4 +62,5 @@ pub fn create_routes() -> Router<Body> {
         .route("/always_errors", get(always_errors))
         .route("/returns_201", post(returns_201))
         .route("/get_json", get(get_json))
+        .route("/validate_data", post(validate_with_serde))
 }

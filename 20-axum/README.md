@@ -61,7 +61,7 @@ cargo add serde@1.0.147 -F derive
   - [x] ***Return JSON data***
     - [x] ***Respond with JSON data***
   - [ ] ***Validate incoming data***
-    - [ ] ***Validating JSON with Serde***
+    - [x] ***Validating JSON with Serde***
     - [ ] ***Custom Extractor with Validation***
 - [ ] Data
   - [ ] ***Creating a database***
