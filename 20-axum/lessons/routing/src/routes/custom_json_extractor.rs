@@ -1,7 +1,12 @@
-use axum::{async_trait, body::HttpBody, extract::{FromRequest, RequestParts}, http::StatusCode, BoxError, Json};
+use axum::{
+    async_trait,
+    body::HttpBody,
+    extract::{FromRequest, RequestParts},
+    http::StatusCode,
+    BoxError, Json,
+};
 use serde::Deserialize;
 use validator::Validate;
-
 
 #[derive(Deserialize, Debug, Validate)]
 pub struct RequestUser {
@@ -16,7 +21,7 @@ impl<B> FromRequest<B> for RequestUser
 where
     B: HttpBody + Send,
     B::Data: Send,
-    B:: Error: Into<BoxError>,
+    B::Error: Into<BoxError>,
 {
     type Rejection = (StatusCode, String);
 

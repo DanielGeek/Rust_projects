@@ -11,6 +11,22 @@ cargo add serde@1.0.147
 cargo add serde@1.0.147 -F derive
 ```
 
+## Help Docker Commands
+```bash
+docker compose up
+docker compose exec database /bin/bash
+psql -U postgres -d postgres
+\dl
+\dt
+select * from tasks;
+exit;
+docker compose down
+docker volume ls
+docker volume rm 20-axum_db-data
+docker compose up -d --wait
+docker compose logs database
+```
+
 
 **Legend**
 
@@ -64,8 +80,8 @@ cargo add serde@1.0.147 -F derive
     - [x] ***Validating JSON with Serde***
     - [x] ***Custom Extractor with Validation***
 - [ ] Data
-  - [ ] ***Creating a database***
-    - [ ] ***Set up a local database with Docker***
+  - [x] ***Creating a database***
+    - [x] ***Set up a local database with Docker***
   - [ ] ***Connect a database***
     - [ ] ***Introducing SeaORM***
     - [ ] ***Connecting to the database***
