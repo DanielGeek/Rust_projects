@@ -58,8 +58,8 @@ cargo add serde@1.0.147 -F derive
   - [x] ***Return the appropriate status code and message when erroring***
     - [x] ***Returning error status codes***
     - [x] ***Returning success status codes***
-  - [ ] ***Return JSON data***
-    - [ ] ***Respond with JSON data***
+  - [x] ***Return JSON data***
+    - [x] ***Respond with JSON data***
   - [ ] ***Validate incoming data***
     - [ ] ***Validating JSON with Serde***
     - [ ] ***Custom Extractor with Validation***
