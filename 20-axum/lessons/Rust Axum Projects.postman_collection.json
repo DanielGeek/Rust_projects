@@ -11,7 +11,7 @@
 			"name": "data",
 			"item": [
 				{
-					"name": "save task",
+					"name": "Save Task",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -25,14 +25,46 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/create_task",
+							"raw": "http://localhost:3000/tasks",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"create_task"
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"do something cool\",\n    \"description\": \"this task created by postman client\",\n    \"priority\": \"A\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/tasks/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks",
+								"1"
 							]
 						}
 					},

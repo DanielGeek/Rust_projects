@@ -94,7 +94,7 @@ sea-orm-cli generate entity -o src/database
     - [x] ***Passing Database To Handlers***
   - [ ] ***CRUD data in the database including soft deletions***
     - [x] ***Create a row in the database***
-    - [ ] ***Get one item from the database***
+    - [x] ***Get one item from the database***
     - [ ] ***Get all items from the database***
     - [ ] ***Using filters***
     - [ ] ***Atomic updates***
