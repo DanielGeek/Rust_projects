@@ -87,11 +87,11 @@ sea-orm-cli generate entity -o src/database
 - [ ] Data
   - [x] ***Creating a database***
     - [x] ***Set up a local database with Docker***
-  - [ ] ***Connect a database***
+  - [x] ***Connect a database***
     - [x] ***Introducing SeaORM***
     - [x] ***Connecting to the database***
     - [x] ***SeaORM Models***
-    - [ ] ***Passing Database To Handlers***
+    - [x] ***Passing Database To Handlers***
   - [ ] ***CRUD data in the database including soft deletions***
     - [ ] ***Create a row in the database***
     - [ ] ***Get one item from the database***
