@@ -56,7 +56,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/tasks/1",
+							"raw": "http://localhost:3000/tasks/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -64,7 +64,38 @@
 							"port": "3000",
 							"path": [
 								"tasks",
-								"1"
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tasks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"do something cool\",\n    \"description\": \"this task created by postman client\",\n    \"priority\": \"A\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks"
 							]
 						}
 					},

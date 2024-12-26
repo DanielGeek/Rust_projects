@@ -95,7 +95,7 @@ sea-orm-cli generate entity -o src/database
   - [ ] ***CRUD data in the database including soft deletions***
     - [x] ***Create a row in the database***
     - [x] ***Get one item from the database***
-    - [ ] ***Get all items from the database***
+    - [x] ***Get all items from the database***
     - [ ] ***Using filters***
     - [ ] ***Atomic updates***
     - [ ] ***Patch updates (maybe re-record using into_active_value?)***
