@@ -27,6 +27,11 @@ docker compose up -d --wait
 docker compose logs database
 ```
 
+## SeaORM CLI help commands
+```bash
+# Inside folder lessons/data execute
+sea-orm-cli generate entity -o src/database
+```
 
 **Legend**
 
@@ -85,7 +90,7 @@ docker compose logs database
   - [ ] ***Connect a database***
     - [x] ***Introducing SeaORM***
     - [x] ***Connecting to the database***
-    - [ ] ***SeaORM Models***
+    - [x] ***SeaORM Models***
     - [ ] ***Passing Database To Handlers***
   - [ ] ***CRUD data in the database including soft deletions***
     - [ ] ***Create a row in the database***
