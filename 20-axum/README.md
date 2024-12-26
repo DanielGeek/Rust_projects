@@ -84,7 +84,7 @@ docker compose logs database
     - [x] ***Set up a local database with Docker***
   - [ ] ***Connect a database***
     - [x] ***Introducing SeaORM***
-    - [ ] ***Connecting to the database***
+    - [x] ***Connecting to the database***
     - [ ] ***SeaORM Models***
     - [ ] ***Passing Database To Handlers***
   - [ ] ***CRUD data in the database including soft deletions***
