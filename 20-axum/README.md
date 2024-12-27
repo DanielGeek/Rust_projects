@@ -99,7 +99,7 @@ sea-orm-cli generate entity -o src/database
     - [x] ***Using filters***
     - [x] ***Atomic updates***
     - [x] ***Patch updates (maybe re-record using into_active_value?)***
-    - [ ] ***Deleting data***
+    - [x] ***Deleting data***
     - [ ] ***Soft-deleting data***
 - [ ] ***Security***
   - [ ] ***Authentication***

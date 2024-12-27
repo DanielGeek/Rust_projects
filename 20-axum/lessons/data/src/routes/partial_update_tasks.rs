@@ -2,7 +2,8 @@ use crate::database::tasks;
 use crate::database::tasks::Entity as Tasks;
 use axum::{extract::Path, http::StatusCode, Extension, Json};
 use sea_orm::{
-    prelude::DateTimeWithTimeZone, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter, Set
+    prelude::DateTimeWithTimeZone, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel,
+    QueryFilter, Set,
 };
 use serde::Deserialize;
 
@@ -15,7 +16,7 @@ pub struct RequestTask {
         with = "::serde_with::rust::double_option" // Deserialize as None if the value is null
     )]
     pub priority: Option<Option<String>>,
-    pub title:  Option<String>,
+    pub title: Option<String>,
     #[serde(
         default,                                    // Deserialize as None if the value is not present
         skip_serializing_if = "Option::is_none",    // Do not serialize if the value is None
@@ -42,9 +43,10 @@ pub async fn partial_update(
     Json(request_task): Json<RequestTask>,
 ) -> Result<(), StatusCode> {
     let mut db_task = if let Some(task) = Tasks::find_by_id(task_id)
-    .one(&database)
-    .await
-    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)? {
+        .one(&database)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+    {
         task.into_active_model()
     } else {
         return Err(StatusCode::NOT_FOUND);
