@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "11512163-377d-4811-99db-8f3b4bfd855b",
-		"name": "Rust Axum Projects",
+		"name": "Rust Axum Project",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "6097804",
 		"_collection_link": "https://solar-trinity-660527.postman.co/workspace/My-Workspace~6c54c99e-ebd1-4aa2-8b32-467b0bfbbf86/collection/6097804-11512163-377d-4811-99db-8f3b4bfd855b?action=share&source=collection_link&creator=6097804"
@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"do something cool\",\n    \"description\": \"this task created by postman client\",\n    \"priority\": \"A\"\n}",
+							"raw": "{\n    \"title\": \"I am a task\",\n    \"description\": \"this is my description\",\n    \"priority\": \"A\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -56,7 +56,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/tasks/6",
+							"raw": "http://localhost:3000/tasks/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -64,7 +64,36 @@
 							"port": "3000",
 							"path": [
 								"tasks",
-								"6"
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Task By Id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n        \"id\": 8,\n        \"title\": \"I am an updated task\",\n        \"priority\": \"B\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/tasks/71",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks",
+								"71"
 							]
 						}
 					},
@@ -96,6 +125,82 @@
 							"port": "3000",
 							"path": [
 								"tasks"
+							],
+							"query": [
+								{
+									"key": "priority",
+									"value": "A",
+									"disabled": true
+								},
+								{
+									"key": "title",
+									"value": "My new title",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update Task By Id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"priority\": \"A\",\n    \"description\": \"I am back\",\n    \"title\": \"My new title\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/tasks/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Task By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"priority\": \"A\",\n    \"description\": \"I am back\",\n    \"title\": \"My new title\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/tasks/4?soft=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks",
+								"4"
+							],
+							"query": [
+								{
+									"key": "soft",
+									"value": "true"
+								}
 							]
 						}
 					},
