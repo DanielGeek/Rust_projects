@@ -1,9 +1,10 @@
 use crate::database::tasks;
 use crate::database::tasks::Entity as Tasks;
 use axum::{extract::Path, http::StatusCode, Extension, Json};
-use sea_orm::{prelude::DateTimeWithTimeZone, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
+use sea_orm::{
+    prelude::DateTimeWithTimeZone, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set,
+};
 use serde::Deserialize;
-
 
 #[derive(Deserialize)]
 pub struct RequestTask {
