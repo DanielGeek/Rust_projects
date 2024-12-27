@@ -1,5 +1,9 @@
 use crate::database::tasks::{self, Entity as Tasks};
-use axum::{extract::{Path, Query}, http::StatusCode, Extension, Json};
+use axum::{
+    extract::{Path, Query},
+    http::StatusCode,
+    Extension, Json,
+};
 use sea_orm::{ColumnTrait, Condition, DatabaseConnection, EntityTrait, QueryFilter};
 use serde::{Deserialize, Serialize};
 
@@ -59,6 +63,6 @@ pub async fn get_all_tasks(
             description: db_task.description,
         })
         .collect();
-    
+
     Ok(Json(tasks))
 }
