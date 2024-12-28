@@ -92,7 +92,7 @@ sea-orm-cli generate entity -o src/database
     - [x] ***Connecting to the database***
     - [x] ***SeaORM Models***
     - [x] ***Passing Database To Handlers***
-  - [ ] ***CRUD data in the database including soft deletions***
+  - [x] ***CRUD data in the database including soft deletions***
     - [x] ***Create a row in the database***
     - [x] ***Get one item from the database***
     - [x] ***Get all items from the database***
@@ -100,11 +100,11 @@ sea-orm-cli generate entity -o src/database
     - [x] ***Atomic updates***
     - [x] ***Patch updates (maybe re-record using into_active_value?)***
     - [x] ***Deleting data***
-    - [ ] ***Soft-deleting data***
+    - [x] ***Soft-deleting data***
 - [ ] ***Security***
   - [ ] ***Authentication***
     - [ ] ***How auth works***
-      - [ ] ***creating account***
+      - [x] ***creating account***
       - [ ] ***login***
       - [ ] ***guard route***
       - [ ] ***logout***

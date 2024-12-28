@@ -1,5 +1,9 @@
 use crate::database::tasks::{self, Entity as Tasks};
-use axum::{extract::{Path, Query}, http::StatusCode, Extension};
+use axum::{
+    extract::{Path, Query},
+    http::StatusCode,
+    Extension,
+};
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter, Set};
 use serde::Deserialize;
 
@@ -38,19 +42,20 @@ pub async fn delete_task(
         let mut task = if let Some(task) = Tasks::find_by_id(task_id)
             .one(&database)
             .await
-            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)? {
-                task.into_active_model()
-            } else {
-                return Err(StatusCode::NOT_FOUND);
-            };
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+        {
+            task.into_active_model()
+        } else {
+            return Err(StatusCode::NOT_FOUND);
+        };
 
-            let now = chrono::Utc::now();
+        let now = chrono::Utc::now();
 
-            task.deleted_at = Set(Some(now.into()));
-            Tasks::update(task)
-                .exec(&database)
-                .await
-                .map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)?;
+        task.deleted_at = Set(Some(now.into()));
+        Tasks::update(task)
+            .exec(&database)
+            .await
+            .map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)?;
     } else {
         // DELETE TASKS OPTION 3
         Tasks::delete_many()

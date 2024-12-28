@@ -1,4 +1,5 @@
 mod create_task;
+mod create_user;
 mod custom_json_extractor;
 mod delete_task;
 mod get_tasks;
@@ -20,6 +21,7 @@ use partial_update_tasks::partial_update;
 use sea_orm::DatabaseConnection;
 use update_tasks::atomic_update;
 use validate_with_serde::validate_with_serde;
+use create_user::create_user;
 
 pub async fn create_routes(database: DatabaseConnection) -> Router<Body> {
     Router::new()
@@ -32,5 +34,6 @@ pub async fn create_routes(database: DatabaseConnection) -> Router<Body> {
         .route("/tasks/:task_id", put(atomic_update))
         .route("/tasks/:task_id", patch(partial_update))
         .route("/tasks/:task_id", delete(delete_task))
+        .route("/users", post(create_user))
         .layer(Extension(database))
 }
