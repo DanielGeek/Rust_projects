@@ -103,12 +103,12 @@ sea-orm-cli generate entity -o src/database
     - [x] ***Soft-deleting data***
 - [ ] ***Security***
   - [ ] ***Authentication***
-    - [ ] ***How auth works***
+    - [x] ***How auth works***
       - [x] ***creating account***
       - [x] ***login***
       - [x] ***guard route***
       - [x] ***logout***
-      - [ ] ***use middleware***
+      - [x] ***use middleware***
     - [ ] ***Make it secure***
       - [ ] ***Hashing the password***
       - [ ] ***use a JWT***
