@@ -11,13 +11,23 @@
 			"name": "data",
 			"item": [
 				{
-					"name": "Save Task",
+					"name": "Create Task",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "123412341234222",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"I am a task\",\n    \"description\": \"this is my description\",\n    \"priority\": \"A\"\n}",
+							"raw": "{\n    \"title\": \"do another cool thing\",\n    \"description\": \"this task created by postman client\",\n    \"priority\": \"A\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
