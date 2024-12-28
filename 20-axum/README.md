@@ -105,7 +105,7 @@ sea-orm-cli generate entity -o src/database
   - [ ] ***Authentication***
     - [ ] ***How auth works***
       - [x] ***creating account***
-      - [ ] ***login***
+      - [x] ***login***
       - [ ] ***guard route***
       - [ ] ***logout***
       - [ ] ***use middleware***
