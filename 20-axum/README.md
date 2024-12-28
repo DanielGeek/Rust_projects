@@ -110,7 +110,7 @@ sea-orm-cli generate entity -o src/database
       - [x] ***logout***
       - [x] ***use middleware***
     - [ ] ***Make it secure***
-      - [ ] ***Hashing the password***
+      - [x] ***Hashing the password***
       - [ ] ***use a JWT***
 - [ ] ***Helper Utilities***
   - [ ] ***Custom errors***

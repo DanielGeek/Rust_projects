@@ -31,7 +31,7 @@ pub async fn create_user(
 ) -> Result<Json<ResponseUser>, StatusCode> {
     let new_user = users::ActiveModel {
         username: Set(request_user.username),
-        password: Set(request_user.password),
+        password: Set(hash_password(request_user.password)?),
         token: Set(Some("n12121212jasjajsas".to_owned())),
         ..Default::default()
     }
@@ -57,6 +57,10 @@ pub async fn login(
         .map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     if let Some(db_user) = db_user {
+        if !verify_password(request_user.password, &db_user.password)? {
+            return Err(StatusCode::UNAUTHORIZED);
+        }
+
         let new_token = "123412341234".to_owned();
         let mut user = db_user.into_active_model();
 
@@ -90,4 +94,12 @@ pub async fn logout(
         .map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(())
+}
+
+fn hash_password(password: String) -> Result<String, StatusCode> {
+    bcrypt::hash(password, 14).map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)
+}
+
+fn verify_password(password: String, hash: &str) -> Result<bool, StatusCode> {
+    bcrypt::verify(password, hash).map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)
 }

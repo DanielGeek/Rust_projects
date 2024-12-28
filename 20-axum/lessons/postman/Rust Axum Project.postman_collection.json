@@ -55,7 +55,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"Daniel\",\n    \"password\": \"1234\"\n}",
+							"raw": "{\n    \"username\": \"Daniel2\",\n    \"password\": \"1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -261,7 +261,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"Daniel\",\n    \"password\": \"1234\"\n}",
+							"raw": "{\n    \"username\": \"Daniel2\",\n    \"password\": \"1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
