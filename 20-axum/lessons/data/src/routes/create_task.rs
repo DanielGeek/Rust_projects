@@ -1,8 +1,12 @@
-use axum::{headers::{authorization::Bearer, Authorization}, http::StatusCode, Extension, Json, TypedHeader};
+use crate::database::tasks;
+use crate::database::users::{self, Entity as Users};
+use axum::{
+    headers::{authorization::Bearer, Authorization},
+    http::StatusCode,
+    Extension, Json, TypedHeader,
+};
 use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 use serde::Deserialize;
-use crate::database::users::{self, Entity as Users};
-use crate::database::tasks;
 
 #[derive(Deserialize)]
 pub struct RequestTask {
@@ -14,7 +18,7 @@ pub struct RequestTask {
 pub async fn create_task(
     Extension(database): Extension<DatabaseConnection>,
     Json(request_task): Json<RequestTask>,
-    authorization: TypedHeader<Authorization<Bearer>>
+    authorization: TypedHeader<Authorization<Bearer>>,
 ) -> Result<(), StatusCode> {
     let token = authorization.token();
 
@@ -22,11 +26,12 @@ pub async fn create_task(
         .filter(users::Column::Token.eq(Some(token)))
         .one(&database)
         .await
-        .map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)? {
-            user
-        } else {
-            return Err(StatusCode::UNAUTHORIZED);
-        };
+        .map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)?
+    {
+        user
+    } else {
+        return Err(StatusCode::UNAUTHORIZED);
+    };
 
     let new_task = tasks::ActiveModel {
         priority: Set(request_task.priority),
