@@ -112,8 +112,8 @@ sea-orm-cli generate entity -o src/database
     - [ ] ***Make it secure***
       - [x] ***Hashing the password***
       - [x] ***use a JWT***
-- [ ] ***Helper Utilities***
-  - [ ] ***Custom errors***
+- [x] ***Helper Utilities***
+  - [x] ***Custom errors***
 - [ ] ***Devops***
   - [ ] ***Deployment***
     - to own server
