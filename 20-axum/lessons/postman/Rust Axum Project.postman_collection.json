@@ -369,8 +369,11 @@
 			"item": [
 				{
 					"name": "Patch Hello Wolrd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "PATCH",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -382,13 +385,13 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/",
+							"raw": "localhost:3000/hello_world",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								""
+								"hello_world"
 							]
 						}
 					},
@@ -400,14 +403,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/path_variables/151",
+							"raw": "localhost:3000/path_variables/15",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"path_variables",
-								"151"
+								"15"
 							]
 						}
 					},
@@ -422,14 +425,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/mirror_user_agent/",
+							"raw": "localhost:3000/mirror_user_agent",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"mirror_user_agent",
-								""
+								"mirror_user_agent"
 							]
 						}
 					},
@@ -547,14 +549,13 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:3000/mirror_custom_header/",
+							"raw": "localhost:3000/mirror_custom_header",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"mirror_custom_header",
-								""
+								"mirror_custom_header"
 							]
 						}
 					},

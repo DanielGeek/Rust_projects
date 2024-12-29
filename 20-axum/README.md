@@ -1,4 +1,4 @@
-# Rust Axum V0.0.5.17 projects
+# Rust Axum V0.0.6.1 projects
 
 Axum is a backend API framework for Rust. It's written by the same team that makes Tokio.rs and therefore is 100% compatible with Tokio. It's meant to be easy to get started with but powerful enough to run your project on.
 
@@ -122,10 +122,10 @@ sea-orm-cli generate entity -o src/database
     - TLS
 - [ ] ***Addendums***
   - [ ] ***Updating Router lessons to Axum 0.6***
-    - [ ] Update version
-    - [ ] Router function returns Stateless Router
-    - [ ] Verify everything is working with Thunderclient
-    - [ ] Use App State instead of Extension
+    - [x] Update version
+    - [x] Router function returns Stateless Router
+    - [x] Verify everything is working with Postman
+    - [x] Use App State instead of Extension
       - middleware_message
   - [ ] ***Updating Data lessons to Axum 0.6***
     - [ ] Update version
