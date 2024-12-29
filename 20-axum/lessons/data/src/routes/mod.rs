@@ -10,7 +10,10 @@ mod users;
 mod validate_with_serde;
 
 use axum::{
-    body::Body, middleware, routing::{delete, get, patch, post, put}, Extension, Router
+    body::Body,
+    middleware,
+    routing::{delete, get, patch, post, put},
+    Extension, Router,
 };
 use create_task::create_task;
 use custom_json_extractor::custom_json_extractor;
@@ -26,9 +29,9 @@ use validate_with_serde::validate_with_serde;
 pub async fn create_routes(database: DatabaseConnection) -> Router<Body> {
     Router::new()
         .route("/users/logout", post(logout))
-        .route_layer(middleware::from_fn(guard))
-        // put other routes after route_layer to protect them
         .route("/hello_world", get(hello_world::hello_world))
+        .route_layer(middleware::from_fn(guard))
+        // put other routes above route_layer to protect them
         .route("/validate_data", post(validate_with_serde))
         .route("/custom_json_extractor", post(custom_json_extractor))
         .route("/tasks", post(create_task))

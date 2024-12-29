@@ -1,4 +1,7 @@
-use crate::database::{users::Entity as Users, users::Model};
+use crate::{
+    database::users::{Entity as Users, Model},
+    utils::jwt::create_jwt,
+};
 use axum::{
     headers::{authorization::Bearer, Authorization},
     http::StatusCode,
@@ -29,10 +32,11 @@ pub async fn create_user(
     Json(request_user): Json<RequestUser>,
     Extension(database): Extension<DatabaseConnection>,
 ) -> Result<Json<ResponseUser>, StatusCode> {
+    let jwt = create_jwt()?;
     let new_user = users::ActiveModel {
         username: Set(request_user.username),
         password: Set(hash_password(request_user.password)?),
-        token: Set(Some("n12121212jasjajsas".to_owned())),
+        token: Set(Some(jwt)),
         ..Default::default()
     }
     .save(&database)
@@ -61,7 +65,7 @@ pub async fn login(
             return Err(StatusCode::UNAUTHORIZED);
         }
 
-        let new_token = "123412341234".to_owned();
+        let new_token = create_jwt()?;
         let mut user = db_user.into_active_model();
 
         user.token = Set(Some(new_token));

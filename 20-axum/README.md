@@ -101,8 +101,8 @@ sea-orm-cli generate entity -o src/database
     - [x] ***Patch updates (maybe re-record using into_active_value?)***
     - [x] ***Deleting data***
     - [x] ***Soft-deleting data***
-- [ ] ***Security***
-  - [ ] ***Authentication***
+- [x] ***Security***
+  - [x] ***Authentication***
     - [x] ***How auth works***
       - [x] ***creating account***
       - [x] ***login***
@@ -111,7 +111,7 @@ sea-orm-cli generate entity -o src/database
       - [x] ***use middleware***
     - [ ] ***Make it secure***
       - [x] ***Hashing the password***
-      - [ ] ***use a JWT***
+      - [x] ***use a JWT***
 - [ ] ***Helper Utilities***
   - [ ] ***Custom errors***
 - [ ] ***Devops***
