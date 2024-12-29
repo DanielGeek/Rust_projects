@@ -35,9 +35,9 @@ sea-orm-cli generate entity -o src/database
 
 **Legend**
 
-- [ ] Unit
-  - [ ] Standard
-    - [ ] Lesson
+- [x] Unit
+  - [x] Standard
+    - [x] Lesson
     - [x] ***Why Rust / Why Axum?***
       - Strong type system
       - Tooling
@@ -84,7 +84,7 @@ sea-orm-cli generate entity -o src/database
   - [x] ***Validate incoming data***
     - [x] ***Validating JSON with Serde***
     - [x] ***Custom Extractor with Validation***
-- [ ] Data
+- [x] Data
   - [x] ***Creating a database***
     - [x] ***Set up a local database with Docker***
   - [x] ***Connect a database***
@@ -109,7 +109,7 @@ sea-orm-cli generate entity -o src/database
       - [x] ***guard route***
       - [x] ***logout***
       - [x] ***use middleware***
-    - [ ] ***Make it secure***
+    - [x] ***Make it secure***
       - [x] ***Hashing the password***
       - [x] ***use a JWT***
 - [x] ***Helper Utilities***
@@ -120,29 +120,29 @@ sea-orm-cli generate entity -o src/database
     - VPC
     - Container service
     - TLS
-- [ ] ***Addendums***
-  - [ ] ***Updating Router lessons to Axum 0.6***
+- [x] ***Addendums***
+  - [x] ***Updating Router lessons to Axum 0.6***
     - [x] Update version
     - [x] Router function returns Stateless Router
     - [x] Verify everything is working with Postman
     - [x] Use App State instead of Extension
       - middleware_message
-  - [ ] ***Updating Data lessons to Axum 0.6***
-    - [ ] Update version
-    - [ ] Custom JSON extractor
+  - [x] ***Updating Data lessons to Axum 0.6***
+    - [x] Update version
+    - [x] Custom JSON extractor
       - Add missing generic
       - Add state to function signature
       - Brought in Extract trait
       - Added _ to type for extract
-    - [ ] Return stateless router
-    - [ ] Move body consuming extractors to the bottom of function signatures
-    - [ ] Custom JSON extractor again
+    - [x] Return stateless router
+    - [x] Move body consuming extractors to the bottom of function signatures
+    - [x] Custom JSON extractor again
       - Add missing 'static lifetime bound
-    - [ ] Full test
-    - [ ] Put DatabaseConnection in AppState
+    - [x] Full test
+    - [x] Put DatabaseConnection in AppState
       - Update handlers to pull in State
       - Update guard middleware to use state
-    - [ ] Update guard middleware to use extractors directly
+    - [x] Update guard middleware to use extractors directly
 - [ ] *Project*
   - [ ] *Create a server that passes all tests*
     - [ ] ***Introduce the project***

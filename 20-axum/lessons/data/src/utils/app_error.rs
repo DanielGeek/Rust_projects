@@ -1,7 +1,6 @@
 use axum::{http::StatusCode, response::IntoResponse, Json};
 use serde::Serialize;
 
-
 pub struct AppError {
     code: StatusCode,
     message: String,
@@ -23,7 +22,8 @@ impl IntoResponse for AppError {
             Json(ResponseMessage {
                 message: self.message,
             }),
-        ).into_response()
+        )
+            .into_response()
     }
 }
 

@@ -18,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "123412341234",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzU0NTQzMjMsImlhdCI6MTczNTQ1NDI5M30.fssI8_C-La6j499iir2NqPnHKucOF1JrcPsBfymp15U",
 									"type": "string"
 								}
 							]
@@ -55,7 +55,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"Daniel2\",\n    \"password\": \"1234\"\n}",
+							"raw": "{\n    \"username\": \"Daniel3\",\n    \"password\": \"1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -94,7 +94,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/tasks/1",
+							"raw": "http://localhost:3000/tasks/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -102,7 +102,7 @@
 							"port": "3000",
 							"path": [
 								"tasks",
-								"1"
+								"12"
 							]
 						}
 					},
@@ -123,7 +123,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/tasks/1",
+							"raw": "http://localhost:3000/tasks/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -131,7 +131,7 @@
 							"port": "3000",
 							"path": [
 								"tasks",
-								"1"
+								"12"
 							]
 						}
 					},
@@ -148,7 +148,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "123412341234",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzU0NTQzMjMsImlhdCI6MTczNTQ1NDI5M30.fssI8_C-La6j499iir2NqPnHKucOF1JrcPsBfymp15U",
 									"type": "string"
 								}
 							]
@@ -205,7 +205,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/tasks/7",
+							"raw": "http://localhost:3000/tasks/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -213,7 +213,7 @@
 							"port": "3000",
 							"path": [
 								"tasks",
-								"7"
+								"12"
 							]
 						}
 					},
@@ -234,7 +234,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/tasks/4?soft=true",
+							"raw": "http://localhost:3000/tasks/12?soft=true",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -242,7 +242,7 @@
 							"port": "3000",
 							"path": [
 								"tasks",
-								"4"
+								"12"
 							],
 							"query": [
 								{
@@ -291,7 +291,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "123412341234",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzU0NTQ1MzgsImlhdCI6MTczNTQ1NDUwOH0.8vZ1xYgqwBHKxwb8n9TvAo2uAQ3tQmOnMDVKvxU0TlY",
 									"type": "string"
 								}
 							]
@@ -333,7 +333,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzU0Mzk1ODIsImlhdCI6MTczNTQzOTU1Mn0.Kd7VH7P3S2utIaUzJSbW9nxMABOrIuzHulCjeEoooPE",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzU0NTU3NjUsImlhdCI6MTczNTQ1NTczNX0.Yg3LCvW_GUOLd-4Blm90eAKBEW3EROE5OvaJlNOGbaU",
 									"type": "string"
 								}
 							]
@@ -357,6 +357,72 @@
 							"port": "3000",
 							"path": [
 								"hello_world"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "message",
+								"value": "Hello From Postman!!!!",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Dangel\",\n    \"password\": \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/validate_data",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"validate_data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Custom Json Extractor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "message",
+								"value": "Hello From Postman!!!!",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Dangel@gmail.com\",\n    \"password\": \"1234123123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/custom_json_extractor",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"custom_json_extractor"
 							]
 						}
 					},

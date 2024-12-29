@@ -3,6 +3,7 @@ use crate::{
     utils::jwt::create_jwt,
 };
 use axum::{
+    extract::State,
     headers::{authorization::Bearer, Authorization},
     http::StatusCode,
     Extension, Json, TypedHeader,
@@ -29,8 +30,8 @@ pub struct ResponseUser {
 }
 
 pub async fn create_user(
+    State(database): State<DatabaseConnection>,
     Json(request_user): Json<RequestUser>,
-    Extension(database): Extension<DatabaseConnection>,
 ) -> Result<Json<ResponseUser>, StatusCode> {
     let jwt = create_jwt()?;
     let new_user = users::ActiveModel {
@@ -51,8 +52,8 @@ pub async fn create_user(
 }
 
 pub async fn login(
+    State(database): State<DatabaseConnection>,
     Json(request_user): Json<RequestUser>,
-    Extension(database): Extension<DatabaseConnection>,
 ) -> Result<Json<ResponseUser>, StatusCode> {
     let db_user = Users::find()
         .filter(users::Column::Username.eq(request_user.username))
@@ -86,7 +87,7 @@ pub async fn login(
 }
 
 pub async fn logout(
-    Extension(database): Extension<DatabaseConnection>,
+    State(database): State<DatabaseConnection>,
     Extension(user): Extension<Model>,
 ) -> Result<(), StatusCode> {
     let mut user = user.into_active_model();

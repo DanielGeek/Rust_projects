@@ -10,10 +10,7 @@ mod users;
 mod validate_with_serde;
 
 use axum::{
-    body::Body,
-    middleware,
-    routing::{delete, get, patch, post, put},
-    Extension, Router,
+    extract::FromRef, middleware, routing::{delete, get, patch, post, put}, Extension, Router
 };
 use create_task::create_task;
 use custom_json_extractor::custom_json_extractor;
@@ -26,11 +23,17 @@ use update_tasks::atomic_update;
 use users::{create_user, login, logout};
 use validate_with_serde::validate_with_serde;
 
-pub async fn create_routes(database: DatabaseConnection) -> Router<Body> {
+#[derive(Clone, FromRef)]
+pub struct AppState {
+    pub database: DatabaseConnection,
+}
+
+pub async fn create_routes(database: DatabaseConnection) -> Router {
+    let app_state = AppState { database };
     Router::new()
         .route("/users/logout", post(logout))
         .route("/hello_world", get(hello_world::hello_world))
-        .route_layer(middleware::from_fn(guard))
+        .route_layer(middleware::from_fn_with_state(app_state.clone(), guard))
         // put other routes above route_layer to protect them
         .route("/validate_data", post(validate_with_serde))
         .route("/custom_json_extractor", post(custom_json_extractor))
@@ -42,5 +45,5 @@ pub async fn create_routes(database: DatabaseConnection) -> Router<Body> {
         .route("/tasks/:task_id", delete(delete_task))
         .route("/users", post(create_user))
         .route("/users/login", post(login))
-        .layer(Extension(database))
+        .with_state(app_state)
 }

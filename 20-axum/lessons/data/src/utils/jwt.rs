@@ -32,11 +32,11 @@ pub fn is_valid(token: &String) -> Result<bool, AppError> {
         |error| match error.kind() {
             jsonwebtoken::errors::ErrorKind::ExpiredSignature => AppError::new(
                 StatusCode::UNAUTHORIZED,
-                "Your session has expired, please login again"
+                "Your session has expired, please login again",
             ),
             _ => AppError::new(
                 StatusCode::INTERNAL_SERVER_ERROR,
-                "Something went wrong, please try again"
+                "Something went wrong, please try again",
             ),
         },
     )?;
