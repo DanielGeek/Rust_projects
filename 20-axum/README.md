@@ -114,8 +114,8 @@ sea-orm-cli generate entity -o src/database
       - [x] ***use a JWT***
 - [x] ***Helper Utilities***
   - [x] ***Custom errors***
-- [ ] ***Devops***
-  - [ ] ***Deployment***
+- [x] ***Devops***
+  - [x] ***Deployment***
     - to own server
     - VPC
     - Container service
