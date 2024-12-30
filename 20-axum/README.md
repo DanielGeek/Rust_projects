@@ -29,7 +29,8 @@ docker compose logs database
 
 ## SeaORM CLI help commands
 ```bash
-# Inside folder lessons/data execute
+# You will need set your DATABASE_URL Connection inside your .env file
+# Inside folder lessons/data or project_solution folder execute the following command
 sea-orm-cli generate entity -o src/database
 ```
 
@@ -145,9 +146,9 @@ sea-orm-cli generate entity -o src/database
     - [x] Update guard middleware to use extractors directly
 - [ ] *Project*
   - [ ] *Create a server that passes all tests*
-    - [ ] ***Introduce the project***
-    - [ ] ***Hello world with tests***
-    - [ ] ***Create user***
+    - [x] ***Introduce the project***
+    - [x] ***Hello world with tests***
+    - [x] ***Create user***
     - [ ] ***Handle duplicate username***
     - [ ] ***sign in***
     - [ ] ***handling bad username/password***
