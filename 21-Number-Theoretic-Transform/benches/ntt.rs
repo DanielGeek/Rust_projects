@@ -1,33 +1,28 @@
-use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
-use app::dft::ntt::Table;
-use app::dft::DFT;
+use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion}; // Import Criterion for benchmarking
+use app::dft::ntt::Table; // Import the NTT table implementation
+use app::dft::DFT; // Import the DFT trait
 
+/// Benchmark the `forward_inplace` method of the NTT implementation.
 fn forward_inplace(c: &mut Criterion) {
-    fn runner(log_n:usize) -> Box<dyn FnMut()> {
-        let ntt_table: Table<u64> = Table::<u64>::new();
-        let mut a: Vec<u64> = vec![0; 1<<log_n as usize];
-        for i in 0..a.len(){
-            a[i] = i as u64;
-        }
-        Box::new(move || {
-            ntt_table.forward_inplace(&mut a)
-        })
+    // Create a benchmarking group named "forward_inplace"
+    let mut group = c.benchmark_group("forward_inplace");
+
+    // Test for sizes 2^10 (1024) to 2^16 (65536)
+    for log_n in 10..=16 {
+        let n = 1 << log_n; // Calculate the size of the array as 2^log_n
+        let table = Table::new(n); // Initialize the NTT table with the size
+        let mut data: Vec<u64> = (0..n as u64).collect(); // Create an array with sequential numbers
+
+        // Benchmark the `forward_inplace` function with the input size `n`
+        group.bench_with_input(BenchmarkId::from_parameter(log_n), &log_n, |b, _| {
+            b.iter(|| table.forward_inplace(&mut data)) // Perform NTT on the data
+        });
     }
 
-    let mut b: criterion::BenchmarkGroup<'_, criterion::measurement::WallTime> = c.benchmark_group("forward_inplace");
-    for log_n in 11..17 {
-
-        let runners: [(&str, Box<dyn FnMut()>); 1] = [
-            ("prime", {
-                runner(log_n)
-            }),
-        ];
-        for (name, mut runner) in runners {
-            let id = BenchmarkId::new(name, 1<<log_n);
-            b.bench_with_input(id, &(), |b: &mut criterion::Bencher<'_>, _| b.iter(&mut runner));
-        }
-    }
+    // Finalize the benchmarking group
+    group.finish();
 }
 
+// Criterion boilerplate: Define the benchmark group and entry point
 criterion_group!(benches, forward_inplace);
 criterion_main!(benches);
