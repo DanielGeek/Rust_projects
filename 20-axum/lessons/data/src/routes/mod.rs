@@ -10,7 +10,10 @@ mod users;
 mod validate_with_serde;
 
 use axum::{
-    extract::FromRef, middleware, routing::{delete, get, patch, post, put}, Extension, Router
+    extract::FromRef,
+    middleware,
+    routing::{delete, get, patch, post, put},
+    Extension, Router,
 };
 use create_task::create_task;
 use custom_json_extractor::custom_json_extractor;

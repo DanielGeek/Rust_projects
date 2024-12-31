@@ -3,12 +3,12 @@ use crate::{
     utils::{app_error::AppError, jwt::is_valid},
 };
 use axum::{
-    TypedHeader,
     extract::State,
-    headers::{Authorization, authorization::Bearer},
+    headers::{authorization::Bearer, Authorization},
     http::{Request, StatusCode},
     middleware::Next,
     response::Response,
+    TypedHeader,
 };
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 

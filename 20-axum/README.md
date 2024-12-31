@@ -34,7 +34,7 @@ docker compose logs database
 sea-orm-cli generate entity -o src/database
 ```
 
-**Legend**
+## Legend
 
 - [x] Unit
   - [x] Standard
@@ -152,7 +152,7 @@ sea-orm-cli generate entity -o src/database
     - [x] ***Handle duplicate username***
     - [x] ***sign in***
     - [x] ***handling bad username/password***
-    - [ ] ***logging out***
+    - [x] ***logging out***
     - [ ] ***testing bad tokens***
     - [ ] ***creating a task***
     - [ ] ***getting all tasks***
