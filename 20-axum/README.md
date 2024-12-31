@@ -150,7 +150,7 @@ sea-orm-cli generate entity -o src/database
     - [x] ***Hello world with tests***
     - [x] ***Create user***
     - [x] ***Handle duplicate username***
-    - [ ] ***sign in***
+    - [x] ***sign in***
     - [ ] ***handling bad username/password***
     - [ ] ***logging out***
     - [ ] ***testing bad tokens***
