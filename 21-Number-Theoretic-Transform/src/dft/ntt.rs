@@ -1,6 +1,9 @@
 use crate::dft::DFT; // Import the DFT trait for compatibility
 use std::simd::u64x4;
 
+/// Prime number chosen for efficient NTT
+const P: u64 = 18446744069414584321; // This is the prime we are working with, as per Bonus 2
+
 /// Represents a table for NTT operations.
 pub struct Table<O> {
     q: O,                   // NTT-friendly prime modulus
@@ -13,8 +16,10 @@ pub struct Table<O> {
 impl Table<u64> {
     /// Initialize a new NTT table with a given size.
     pub fn new(n: usize) -> Self {
-        let q = 0x1fffffffffe00001u64; // 61-bit prime modulus
-        let psi = 0x15eb043c7aa2b01fu64; // 2^17-th root of unity
+        let q: u64 = P; // Use the optimized prime P
+        // let q = 0x1fffffffffe00001u64; // 61-bit prime modulus
+        let psi = 2u64.pow(32); // 2^32 as root of unity for our field (Goldilocks prime)
+        // let psi = 0x15eb043c7aa2b01fu64; // 2^17-th root of unity
         let psi_inv = mod_inverse(psi, q); // Modular inverse of psi
         let n_inv = mod_inverse(n as u64, q); // Modular inverse of n
 
@@ -32,6 +37,8 @@ impl Table<u64> {
         }
     }
 
+    // Bonus 1 and 2. is optimized with SIMD and implement optimised NTT for the Goldilocks prime
+    /// Optimized NTT using SIMD for Goldilocks prime
     fn vectorized_ntt(&self, a: &mut [u64], powers: &[u64], q: u64) {
         let n = a.len();
         let mut len = 1;
@@ -68,6 +75,8 @@ impl Table<u64> {
 }
 
 impl DFT<u64> for Table<u64> {
+
+    // Bonus 1 and 2
     fn forward_inplace(&self, a: &mut [u64]) {
         self.vectorized_ntt(a, &self.psi_powers, self.q); // Optimization with SIMD
     }
@@ -79,10 +88,11 @@ impl DFT<u64> for Table<u64> {
 
     /// Perform the lazy forward NTT (for optimization)
     fn forward_inplace_lazy(&self, a: &mut [u64]) {
-        ntt(a, &self.psi_powers, self.q); // Reuse forward logic
+        self.forward_inplace(a) // Reuse forward logic
     }
 
     fn backward_inplace(&self, a: &mut [u64]) {
+        // self.vectorized_ntt_generic(a, &self.psi_inv_powers, true);
         self.vectorized_ntt(a, &self.psi_inv_powers, self.q);
         for val in a.iter_mut() {
             *val = (*val * self.n_inv) % self.q;
@@ -136,6 +146,7 @@ fn compute_powers(base: u64, n: usize, q: u64) -> Vec<u64> {
     powers
 }
 
+// Fist implementation of NTT algorithm
 /// Perform the NTT algorithm in place.
 fn ntt(a: &mut [u64], powers: &[u64], q: u64) {
     let n = a.len();
