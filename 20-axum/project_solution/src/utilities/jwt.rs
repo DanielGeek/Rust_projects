@@ -37,7 +37,7 @@ pub fn validate_token(secret: &str, token: &str) -> Result<bool, AppError> {
             ErrorKind::InvalidToken
             | ErrorKind::InvalidIssuer
             | ErrorKind::ExpiredSignature => {
-                AppError::new(StatusCode::UNAUTHORIZED, "Bad or missing token")
+                AppError::new(StatusCode::UNAUTHORIZED, "not authenticated!")
             }
             _ => {
                 eprintln!("Error validating token: {:?}", error);
@@ -46,5 +46,5 @@ pub fn validate_token(secret: &str, token: &str) -> Result<bool, AppError> {
                     "Error validating token",
                 )
             }
-        }).map(|claim| true)
+        }).map(|_claim| true)
 }
