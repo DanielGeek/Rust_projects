@@ -1,12 +1,13 @@
 use crate::dft::DFT; // Import the DFT trait for compatibility
+use std::simd::u64x4;
 
 /// Represents a table for NTT operations.
 pub struct Table<O> {
-    q: O,               // NTT-friendly prime modulus
-    psi: O,             // n-th root of unity
-    psi_powers: Vec<O>, // Precomputed powers of psi for the forward transform
+    q: O,                   // NTT-friendly prime modulus
+    psi: O,                 // n-th root of unity
+    psi_powers: Vec<O>,     // Precomputed powers of psi for the forward transform
     psi_inv_powers: Vec<O>, // Precomputed powers of psi^-1 for the inverse transform
-    n_inv: O,           // Modular inverse of N (size of the array)
+    n_inv: O,               // Modular inverse of N (size of the array)
 }
 
 impl Table<u64> {
@@ -30,26 +31,71 @@ impl Table<u64> {
             n_inv,
         }
     }
+
+    fn vectorized_ntt(&self, a: &mut [u64], powers: &[u64], q: u64) {
+        let n = a.len();
+        let mut len = 1;
+
+        while len < n {
+            let step = len * 2;
+            for start in (0..n).step_by(step) {
+                for i in 0..len {
+                    let u = a[start + i]; // First term
+                    let v = (a[start + i + len] * powers[n / step * i]) % q; // Second term
+
+                    // Check if indexes are within limits
+                    if start + i + 3 < n {
+                        // Use SIMD to update values ​​in parallel
+                        let u_simd = u64x4::from([u, a[start + i + 1], a[start + i + 2], a[start + i + 3]]);
+                        let v_simd = u64x4::from([v, v, v, v]);
+
+                        let u_plus_v = u_simd + v_simd;
+                        let u_minus_v = u_simd - v_simd;
+
+                        // We save the processed results in parallel
+                        a[start + i] = u_plus_v[0] % q;
+                        a[start + i + len] = (u_minus_v[0] + q) % q;
+                    } else {
+                        // In case it is not possible to use SIMD, proceed without SIMD
+                        a[start + i] = (u + v) % q;
+                        a[start + i + len] = (u + q - v) % q;
+                    }
+                }
+            }
+            len = step; // We double the length for the next level
+        }
+    }
 }
 
 impl DFT<u64> for Table<u64> {
-    /// Perform the forward NTT in place
     fn forward_inplace(&self, a: &mut [u64]) {
-        ntt(a, &self.psi_powers, self.q); // Call NTT with forward powers
+        self.vectorized_ntt(a, &self.psi_powers, self.q); // Optimization with SIMD
     }
+
+    /// Perform the forward NTT in place
+    // fn forward_inplace(&self, a: &mut [u64]) {
+    //     ntt(a, &self.psi_powers, self.q); // Call NTT with forward powers
+    // }
 
     /// Perform the lazy forward NTT (for optimization)
     fn forward_inplace_lazy(&self, a: &mut [u64]) {
         ntt(a, &self.psi_powers, self.q); // Reuse forward logic
     }
 
-    /// Perform the backward (inverse) NTT in place
     fn backward_inplace(&self, a: &mut [u64]) {
-        ntt(a, &self.psi_inv_powers, self.q); // Call NTT with inverse powers
+        self.vectorized_ntt(a, &self.psi_inv_powers, self.q);
         for val in a.iter_mut() {
-            *val = (*val * self.n_inv) % self.q; // Normalize results
+            *val = (*val * self.n_inv) % self.q;
         }
     }
+
+    /// Perform the backward (inverse) NTT in place
+    // fn backward_inplace(&self, a: &mut [u64]) {
+    //     ntt(a, &self.psi_inv_powers, self.q); // Call NTT with inverse powers
+    //     for val in a.iter_mut() {
+    //         *val = (*val * self.n_inv) % self.q; // Normalize results
+    //     }
+    // }
 
     /// Perform the lazy backward NTT (for optimization)
     fn backward_inplace_lazy(&self, a: &mut [u64]) {

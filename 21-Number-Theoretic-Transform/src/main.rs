@@ -21,7 +21,7 @@ fn main() {
     println!("You entered: {}", number);
 
     // Create NTT table
-    let ntt_table = app::dft::ntt::Table::new(number);
+    let ntt_table = Table::new(number);
 
     // Create a sample vector
     let mut data: Vec<u64> = (0..number as u64).collect();

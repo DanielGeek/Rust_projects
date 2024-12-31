@@ -9,3 +9,9 @@ criterion = "0.5.1"
 [[bench]]
 name = "ntt"
 harness = false
+
+[profile.release]
+opt-level = 3
+lto = true
+target-cpu = "skylake"
+target-feature = "+avx2"
