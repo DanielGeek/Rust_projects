@@ -3,7 +3,6 @@ use sea_orm::{ActiveModelTrait, DatabaseConnection, IntoActiveModel, Set};
 
 use crate::{database::users, utilities::app_error::AppError};
 
-
 pub async fn logout(
     Extension(user): Extension<users::Model>,
     State(db): State<DatabaseConnection>,

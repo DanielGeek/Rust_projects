@@ -154,7 +154,7 @@ sea-orm-cli generate entity -o src/database
     - [x] ***handling bad username/password***
     - [x] ***logging out***
     - [x] ***testing bad tokens***
-    - [ ] ***creating a task***
+    - [x] ***creating a task***
     - [ ] ***getting all tasks***
     - [ ] ***get one task***
     - [ ] ***Update a task***
