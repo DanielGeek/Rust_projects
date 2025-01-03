@@ -1,8 +1,9 @@
 use axum::{
-    BoxError, Json, RequestExt, async_trait,
+    async_trait,
     body::HttpBody,
     extract::FromRequest,
     http::{Request, StatusCode},
+    BoxError, Json, RequestExt,
 };
 use serde::Deserialize;
 use validator::Validate;
@@ -44,7 +45,6 @@ where
             })?;
 
         if let Err(errors) = task.validate() {
-            dbg!(errors.field_errors());
             let field_errors = errors.field_errors();
             for (_, error) in field_errors {
                 return Err(AppError::new(

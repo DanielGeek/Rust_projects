@@ -1,4 +1,4 @@
-use axum::{Extension, Json, extract::State, http::StatusCode};
+use axum::{extract::State, http::StatusCode, Extension, Json};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, Set, TryIntoModel};
 
 use crate::{
@@ -6,7 +6,7 @@ use crate::{
     utilities::app_error::AppError,
 };
 
-use super::{ResponseDataTask, ResponseTask, create_task_extractor::ValidateCreateTask};
+use super::{create_task_extractor::ValidateCreateTask, ResponseDataTask, ResponseTask};
 
 pub async fn create_task(
     Extension(user): Extension<UserModel>,
