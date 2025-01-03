@@ -264,7 +264,7 @@ describe("todo api", () => {
         await createTask(headers, { title: "my one task 20" });
       });
 
-      test.skip("should be able to get my task", async () => {
+      test("should be able to get my task", async () => {
         const result = await axios.get(`${baseUrl}/tasks/${task.id}`, {
           headers,
         });
@@ -273,7 +273,7 @@ describe("todo api", () => {
         expect(result.data.data.title).toBe("my one task 10");
       });
 
-      test.skip("should not be able to get task when logged out", async () => {
+      test("should not be able to get task when logged out", async () => {
         let gotError = false;
         try {
           await axios.get(`${baseUrl}/tasks/${task.id}`);
@@ -286,7 +286,7 @@ describe("todo api", () => {
         expect(gotError).toBe(true);
       });
 
-      test.skip("should not be able to get another users task", async () => {
+      test("should not be able to get another users task", async () => {
         const [newUser, newHeaders] = await createUser();
         let gotError = false;
         try {
