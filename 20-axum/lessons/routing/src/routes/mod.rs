@@ -16,7 +16,11 @@ mod validate_with_serde;
 
 use always_errors::always_errors;
 use axum::{
-    extract::FromRef, http::Method, middleware, routing::{get, post}, Router
+    extract::FromRef,
+    http::Method,
+    middleware,
+    routing::{get, post},
+    Router,
 };
 use custom_json_extractor::custom_json_extractor;
 use get_json::get_json;
