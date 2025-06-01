@@ -3,6 +3,7 @@
 Axum is a backend API framework for Rust. It's written by the same team that makes Tokio.rs and therefore is 100% compatible with Tokio. It's meant to be easy to get started with but powerful enough to run your project on.
 
 ## Help commands
+
 ```bash
 cargo watch -x run
 cargo doc
@@ -12,6 +13,7 @@ cargo add serde@1.0.147 -F derive
 ```
 
 ## Help Docker Commands
+
 ```bash
 docker compose up
 docker compose exec database /bin/bash
@@ -28,6 +30,7 @@ docker compose logs database
 ```
 
 ## SeaORM CLI help commands
+
 ```bash
 # You will need set your DATABASE_URL Connection inside your .env file
 # Inside folder lessons/data or project_solution folder execute the following command

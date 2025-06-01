@@ -1,4 +1,4 @@
-use super::{RequesCreatetUser, ResponseDataUser, ResponseUser, convert_active_to_model};
+use super::{convert_active_to_model, RequesCreatetUser, ResponseDataUser, ResponseUser};
 use crate::database::tasks::{self, Entity as Tasks};
 use crate::database::users::Model;
 use crate::{
@@ -7,7 +7,7 @@ use crate::{
         app_error::AppError, hash::hash_password, jwt::create_token, token_wrapper::TokenWrapper,
     },
 };
-use axum::{Json, extract::State, http::StatusCode};
+use axum::{extract::State, http::StatusCode, Json};
 use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 
 pub async fn create_user(

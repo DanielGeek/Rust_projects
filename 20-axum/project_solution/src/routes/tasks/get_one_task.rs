@@ -4,9 +4,9 @@ use crate::{
 };
 use crate::{database::users::Model, utilities::app_error::AppError};
 use axum::{
-    Extension, Json,
     extract::{Path, State},
     http::StatusCode,
+    Extension, Json,
 };
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 
