@@ -316,7 +316,7 @@ describe("todo api", () => {
           .from("tasks")
           .where({ id: task.id })
           .first();
-        console.log(dbTask.completed_at);
+
         expect(dbTask.completed_at).not.toBe(null);
       });
 

@@ -160,7 +160,7 @@ sea-orm-cli generate entity -o src/database
     - [x] ***creating a task***
     - [x] ***getting all tasks***
     - [x] ***get one task***
-    - [ ] ***Update a task***
+    - [x] ***Update a task***
     - [ ] ***Soft-delete a task***
     - [ ] *Refactor db queries to module*
 - [ ] *Conclusion*
