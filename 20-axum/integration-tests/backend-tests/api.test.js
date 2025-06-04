@@ -523,8 +523,8 @@ describe("todo api", () => {
       });
     });
 
-    describe("soft delete a task", () => {
-      test.skip("should be able to soft delete a task", async () => {
+    describe.only("soft delete a task", () => {
+      test("should be able to soft delete a task", async () => {
         const [user, headers] = await createUser();
         const newTaskResponse = await createTask(headers, {
           title: "am I deleted?",
@@ -540,7 +540,7 @@ describe("todo api", () => {
         expect(dbTask.deleted_at).not.toBe(null);
       });
 
-      test.skip("should not be able to soft delete another users task", async () => {
+      test("should not be able to soft delete another users task", async () => {
         const [user, headers] = await createUser();
         const [user2, headers2] = await createUser();
         const newTaskResponse = await createTask(headers, {

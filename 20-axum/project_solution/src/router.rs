@@ -1,5 +1,5 @@
 use axum::{
-    middleware, routing::{get, patch, post, put}, Router
+    middleware, routing::{delete, get, patch, post, put}, Router
 };
 
 use crate::{
@@ -12,6 +12,7 @@ use crate::{
             get_all_tasks::get_all_tasks,
             get_one_task::get_one_task,
             update_tasks::{mark_completed, mark_uncompleted, update_task},
+            delete_task::soft_delete_task,
         },
         users::{create_user::create_user, login::login, logout::logout},
     },
@@ -26,6 +27,7 @@ pub fn create_router(app_state: AppState) -> Router {
         .route("/api/v1/tasks/:task_id/completed", put(mark_completed))
         .route("/api/v1/tasks/:task_id/uncompleted", put(mark_uncompleted))
         .route("/api/v1/tasks/:task_id", patch(update_task))
+        .route("/api/v1/tasks/:task_id", delete(soft_delete_task))
         .route_layer(middleware::from_fn_with_state(
             app_state.clone(),
             require_authentication,
