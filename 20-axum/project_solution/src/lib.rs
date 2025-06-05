@@ -9,6 +9,7 @@ mod middleware;
 mod router;
 mod routes;
 pub mod utilities;
+mod queries;
 
 pub async fn run(app_state: AppState) {
     let app = create_router(app_state);

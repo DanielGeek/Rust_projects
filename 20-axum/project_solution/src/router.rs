@@ -1,5 +1,7 @@
 use axum::{
-    middleware, routing::{delete, get, patch, post, put}, Router
+    middleware,
+    routing::{delete, get, patch, post, put},
+    Router,
 };
 
 use crate::{
@@ -9,10 +11,10 @@ use crate::{
         hello_world::hello_world,
         tasks::{
             create_task::create_task,
+            delete_task::soft_delete_task,
             get_all_tasks::get_all_tasks,
             get_one_task::get_one_task,
             update_tasks::{mark_completed, mark_uncompleted, update_task},
-            delete_task::soft_delete_task,
         },
         users::{create_user::create_user, login::login, logout::logout},
     },
