@@ -36,5 +36,5 @@ pub async fn soft_delete_task(
             AppError::new(StatusCode::INTERNAL_SERVER_ERROR, "There was an error deleting the task")
         })?;
 
-    todo!()
+    Ok(())
 }
