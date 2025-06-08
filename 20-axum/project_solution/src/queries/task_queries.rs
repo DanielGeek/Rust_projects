@@ -1,9 +1,11 @@
 use axum::http::StatusCode;
-use sea_orm::{ActiveModelTrait, DatabaseConnection, Set, TryIntoModel};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set, TryIntoModel,
+};
 
 use crate::{
     database::{
-        tasks::{self, Model as TaskModel},
+        tasks::{self, Entity as Tasks, Model as TaskModel},
         users::Model as UserModel,
     },
     routes::tasks::create_task_extractor::ValidateCreateTask,
@@ -23,15 +25,58 @@ pub async fn create_task(
         ..Default::default()
     };
 
-    let task = new_task
-        .save(db)
+    save_active_task(db, new_task).await
+}
+
+pub async fn find_task_by_id(
+    db: &DatabaseConnection,
+    id: i32,
+    user_id: i32,
+) -> Result<TaskModel, AppError> {
+    let task = Tasks::find_by_id(id)
+        .filter(tasks::Column::UserId.eq(Some(user_id)))
+        .one(db)
         .await
         .map_err(|error| {
-            eprintln!("Error creatiing new task: {:?}", error);
-            AppError::new(StatusCode::INTERNAL_SERVER_ERROR, "Error creating task")
+            eprintln!("Error getting task by id: {:?}", error);
+            AppError::new(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "There was an error getting your task",
+            )
         })?;
 
-        convert_active_to_model(task)
+    task.ok_or_else(|| {
+        eprintln!("Could not find task by id");
+        AppError::new(StatusCode::NOT_FOUND, "not found")
+    })
+}
+
+pub async fn save_active_task(
+    db: &DatabaseConnection,
+    task: tasks::ActiveModel,
+) -> Result<TaskModel, AppError> {
+    let task = task.save(db).await.map_err(|error| {
+        eprintln!("Error saving task: {:?}", error);
+        AppError::new(StatusCode::INTERNAL_SERVER_ERROR, "Error saving task")
+    })?;
+    convert_active_to_model(task)
+}
+
+pub async fn get_all_tasks(
+    db: &DatabaseConnection,
+    user_id: i32,
+    get_deleted: bool,
+) -> Result<Vec<TaskModel>, AppError> {
+    let mut query = Tasks::find().filter(tasks::Column::UserId.eq(Some(user_id)));
+
+    if !get_deleted {
+        query = query.filter(tasks::Column::DeletedAt.is_null());
+    }
+
+    query.all(db).await.map_err(|error| {
+        eprintln!("Error getting all tasks: {:?}", error);
+        AppError::new(StatusCode::INTERNAL_SERVER_ERROR, "Error getting all tasks")
+    })
 }
 
 fn convert_active_to_model(active_task: tasks::ActiveModel) -> Result<TaskModel, AppError> {

@@ -3,13 +3,14 @@ use crate::{
         tasks::{self, Entity as Tasks},
         users::Model,
     },
+    queries::task_queries,
     routes::tasks::RequestTask,
     utilities::app_error::AppError,
 };
 use axum::{
+    Extension, Json,
     extract::{Path, State},
     http::StatusCode,
-    Extension, Json,
 };
 use chrono::Utc;
 use sea_orm::{
@@ -22,30 +23,14 @@ pub async fn mark_completed(
     Extension(user): Extension<Model>,
     State(db): State<DatabaseConnection>,
 ) -> Result<(), AppError> {
-    let task = Tasks::find_by_id(task_id)
-        .filter(tasks::Column::UserId.eq(Some(user.id)))
-        .one(&db)
-        .await
-        .map_err(|error| {
-            eprintln!("Error getting task to update it: {:?}", error);
-            AppError::new(StatusCode::INTERNAL_SERVER_ERROR, "An error happened")
-        })?;
+    let mut task = task_queries::find_task_by_id(&db, task_id, user.id)
+        .await?
+        .into_active_model();
 
-    let mut task = if let Some(task) = task {
-        task.into_active_model()
-    } else {
-        return Err(AppError::new(StatusCode::NOT_FOUND, "not found"));
-    };
-
-    let now: chrono::DateTime<Utc> = Utc::now();
+    let now = Utc::now();
     task.completed_at = Set(Some(now.into()));
-    task.save(&db).await.map_err(|error| {
-        eprintln!("Error marking task as completed: {:?}", error);
-        AppError::new(
-            StatusCode::INTERNAL_SERVER_ERROR,
-            "Error while updating completed at",
-        )
-    })?;
+
+    task_queries::save_active_task(&db, task).await?;
 
     Ok(())
 }
