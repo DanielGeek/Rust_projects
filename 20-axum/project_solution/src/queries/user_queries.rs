@@ -1,11 +1,8 @@
 use axum::http::StatusCode;
-use sea_orm::{ActiveModelTrait, DatabaseConnection, TryIntoModel};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, TryIntoModel};
 
 use crate::{
-    database::{
-        users::Model as UserModel,
-        users::{self},
-    },
+    database::users::{self, Entity as Users, Model as UserModel},
     utilities::app_error::AppError,
 };
 
@@ -33,6 +30,24 @@ pub async fn save_active_user(
     })?;
 
     convert_active_to_model(user)
+}
+
+pub async fn find_by_username(
+    db: &DatabaseConnection,
+    username: String,
+) -> Result<UserModel, AppError> {
+    Users::find()
+        .filter(users::Column::Username.eq(username))
+        .one(db)
+        .await
+        .map_err(|error| {
+            eprintln!("Error getting by username: {:?}", error);
+            AppError::new(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Error getting user by username, please try again later",
+            )
+        })?
+        .ok_or_else(|| AppError::new(StatusCode::NOT_FOUND, "Could not found user"))
 }
 
 fn convert_active_to_model(active_user: users::ActiveModel) -> Result<UserModel, AppError> {
