@@ -47,7 +47,7 @@ pub async fn find_by_username(
                 "Error getting user by username, please try again later",
             )
         })?
-        .ok_or_else(|| AppError::new(StatusCode::NOT_FOUND, "Could not found user"))
+        .ok_or_else(|| AppError::new(StatusCode::NOT_FOUND, "incorrect username and/or password"))
 }
 
 fn convert_active_to_model(active_user: users::ActiveModel) -> Result<UserModel, AppError> {

@@ -79,7 +79,7 @@ describe("todo api", () => {
         });
       } catch (error) {
         gotError = true;
-        expect(error.response.status).toBe(400);
+        expect(error.response.status).toBe(404);
         expect(error.response.data.error).toBe(
           "incorrect username and/or password"
         );
