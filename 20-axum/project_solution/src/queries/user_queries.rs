@@ -1,5 +1,7 @@
 use axum::http::StatusCode;
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, TryIntoModel};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, TryIntoModel,
+};
 
 use crate::{
     database::users::{self, Entity as Users, Model as UserModel},
@@ -47,7 +49,7 @@ pub async fn find_by_username(
                 "Error getting user by username, please try again later",
             )
         })?
-        .ok_or_else(|| AppError::new(StatusCode::NOT_FOUND, "incorrect username and/or password"))
+        .ok_or_else(|| AppError::new(StatusCode::BAD_REQUEST, "incorrect username and/or password"))
 }
 
 fn convert_active_to_model(active_user: users::ActiveModel) -> Result<UserModel, AppError> {

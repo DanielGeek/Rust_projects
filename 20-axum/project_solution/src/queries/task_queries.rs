@@ -40,7 +40,7 @@ pub async fn find_task_by_id(
         .map_err(|error| {
             eprintln!("Error getting task by id: {:?}", error);
             AppError::new(
-                StatusCode::INTERNAL_SERVER_ERROR,
+                StatusCode::BAD_REQUEST,
                 "There was an error getting your task",
             )
         })?;

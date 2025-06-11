@@ -1,16 +1,12 @@
-use crate::database::users::{self, Entity as Users};
 use crate::queries::user_queries::{find_by_username, save_active_user};
-use crate::routes::users::{ResponseUser, convert_active_to_model};
+use crate::routes::users::ResponseUser;
 use crate::utilities::app_error::AppError;
 use crate::utilities::hash::verify_password;
 use crate::utilities::jwt::create_token;
 use crate::utilities::token_wrapper::TokenWrapper;
 use axum::http::StatusCode;
-use axum::{Json, extract::State};
-use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter,
-    Set,
-};
+use axum::{extract::State, Json};
+use sea_orm::{DatabaseConnection, IntoActiveModel, Set};
 
 use super::{RequesCreatetUser, ResponseDataUser};
 

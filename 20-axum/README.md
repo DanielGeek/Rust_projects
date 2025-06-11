@@ -147,8 +147,8 @@ sea-orm-cli generate entity -o src/database
       - Update handlers to pull in State
       - Update guard middleware to use state
     - [x] Update guard middleware to use extractors directly
-- [ ] *Project*
-  - [ ] *Create a server that passes all tests*
+- [x] *Project*
+  - [x] *Create a server that passes all tests*
     - [x] ***Introduce the project***
     - [x] ***Hello world with tests***
     - [x] ***Create user***
@@ -162,6 +162,6 @@ sea-orm-cli generate entity -o src/database
     - [x] ***get one task***
     - [x] ***Update a task***
     - [x] ***Soft-delete a task***
-    - [ ] *Refactor db queries to module*
+    - [x] *Refactor db queries to module*
 - [ ] *Conclusion*
   - [ ] *Next steps*
