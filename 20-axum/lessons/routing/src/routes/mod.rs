@@ -16,7 +16,11 @@ mod validate_with_serde;
 
 use always_errors::always_errors;
 use axum::{
-    extract::FromRef, http::Method, middleware, routing::{get, post}, Router
+    extract::FromRef,
+    http::Method,
+    middleware,
+    routing::{get, post},
+    Router,
 };
 use custom_json_extractor::custom_json_extractor;
 use get_json::get_json;
@@ -57,7 +61,7 @@ pub fn create_routes() -> Router {
         .route("/mirror_body_string", post(mirror_body_string))
         .route("/mirror_body_json", post(mirror_body_json))
         .route("/path_variables/15", get(hard_coded_path))
-        .route("/path_variables/:id", get(path_variables))
+        .route("/path_variables/{id}", get(path_variables))
         .route("/query_params", get(query_params))
         .route("/mirror_user_agent", get(mirror_user_agent))
         .route("/mirror_custom_header", get(mirror_custom_header))
