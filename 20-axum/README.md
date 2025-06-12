@@ -163,5 +163,11 @@ sea-orm-cli generate entity -o src/database
     - [x] ***Update a task***
     - [x] ***Soft-delete a task***
     - [x] *Refactor db queries to module*
+- [x] *Update Axum to 0.8*
+  - [x] *lessons*
+    - [x] hello world
+    - [ ] routing
+    - [ ] data
+  - [x] *project solution*
 - [ ] *Conclusion*
   - [ ] *Next steps*
