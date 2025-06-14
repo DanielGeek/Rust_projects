@@ -25,11 +25,11 @@ pub fn create_router(app_state: AppState) -> Router {
         .route("/api/v1/users/logout", post(logout))
         .route("/api/v1/tasks", post(create_task))
         .route("/api/v1/tasks", get(get_all_tasks))
-        .route("/api/v1/tasks/:task_id", get(get_one_task))
-        .route("/api/v1/tasks/:task_id/completed", put(mark_completed))
-        .route("/api/v1/tasks/:task_id/uncompleted", put(mark_uncompleted))
-        .route("/api/v1/tasks/:task_id", patch(update_task))
-        .route("/api/v1/tasks/:task_id", delete(soft_delete_task))
+        .route("/api/v1/tasks/{task_id}", get(get_one_task))
+        .route("/api/v1/tasks/{task_id}/completed", put(mark_completed))
+        .route("/api/v1/tasks/{task_id}/uncompleted", put(mark_uncompleted))
+        .route("/api/v1/tasks/{task_id}", patch(update_task))
+        .route("/api/v1/tasks/{task_id}", delete(soft_delete_task))
         .route_layer(middleware::from_fn_with_state(
             app_state.clone(),
             require_authentication,

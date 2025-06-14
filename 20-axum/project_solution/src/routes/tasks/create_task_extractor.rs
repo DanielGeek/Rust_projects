@@ -1,14 +1,12 @@
+use crate::utilities::app_error::AppError;
 use axum::{
-    async_trait,
-    body::HttpBody,
+    body::Body,
     extract::FromRequest,
     http::{Request, StatusCode},
-    BoxError, Json, RequestExt,
+    Json, RequestExt,
 };
 use serde::Deserialize;
 use validator::Validate;
-
-use crate::utilities::app_error::AppError;
 
 #[derive(Debug, Validate, Deserialize)]
 pub struct ValidateCreateTask {
@@ -19,18 +17,14 @@ pub struct ValidateCreateTask {
     pub description: Option<String>,
 }
 
-#[async_trait]
-impl<S, B> FromRequest<S, B> for ValidateCreateTask
+impl<S> FromRequest<S> for ValidateCreateTask
 where
-    B: HttpBody + Send + 'static,
-    B::Data: Send,
-    B::Error: Into<BoxError>,
     S: Send + Sync,
 {
     type Rejection = AppError;
 
     async fn from_request(
-        req: Request<B>,
+        req: Request<Body>,
         _state: &S,
     ) -> Result<ValidateCreateTask, Self::Rejection> {
         let Json(task) = req

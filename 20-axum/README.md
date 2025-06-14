@@ -169,5 +169,5 @@ sea-orm-cli generate entity -o src/database
     - [x] routing
     - [x] data
   - [x] *project solution*
-- [ ] *Conclusion*
-  - [ ] *Next steps*
+- [x] *Conclusion*
+  - [x] *Next steps*

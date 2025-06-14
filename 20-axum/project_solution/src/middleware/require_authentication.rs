@@ -1,5 +1,5 @@
-use crate::database::users::{self, Entity as Users};
 use axum::{
+    body::Body,
     extract::State,
     http::{HeaderMap, Request, StatusCode},
     middleware::Next,
@@ -7,14 +7,17 @@ use axum::{
 };
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 
-use crate::utilities::{app_error::AppError, jwt::validate_token, token_wrapper::TokenWrapper};
+use crate::{
+    database::users::{self, Entity as Users},
+    utilities::{app_error::AppError, jwt::validate_token, token_wrapper::TokenWrapper},
+};
 
-pub async fn require_authentication<T>(
+pub async fn require_authentication(
     State(db): State<DatabaseConnection>,
     State(token_secret): State<TokenWrapper>,
     headers: HeaderMap,
-    mut request: Request<T>,
-    next: Next<T>,
+    mut request: Request<Body>,
+    next: Next,
 ) -> Result<Response, AppError> {
     let header_token = if let Some(token) = headers.get("x-auth-token") {
         token.to_str().map_err(|error| {
