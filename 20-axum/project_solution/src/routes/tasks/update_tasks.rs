@@ -1,20 +1,13 @@
 use crate::{
-    database::{
-        users::Model,
-    },
-    queries::task_queries,
-    routes::tasks::RequestTask,
+    database::users::Model, queries::task_queries, routes::tasks::RequestTask,
     utilities::app_error::AppError,
 };
 use axum::{
-    Extension, Json,
     extract::{Path, State},
+    Extension, Json,
 };
 use chrono::Utc;
-use sea_orm::{
-    DatabaseConnection, IntoActiveModel,
-    Set,
-};
+use sea_orm::{DatabaseConnection, IntoActiveModel, Set};
 
 pub async fn mark_completed(
     Path(task_id): Path<i32>,

@@ -3,7 +3,7 @@ use crate::database::tasks::Entity as Tasks;
 use axum::{
     extract::{Path, State},
     http::StatusCode,
-    Extension, Json,
+    Json,
 };
 use sea_orm::{
     prelude::DateTimeWithTimeZone, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel,

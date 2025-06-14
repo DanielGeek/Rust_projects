@@ -1,8 +1,8 @@
 use crate::queries::task_queries::{find_task_by_id, save_active_task};
 use crate::{database::users::Model, utilities::app_error::AppError};
 use axum::{
-    Extension,
     extract::{Path, State},
+    Extension,
 };
 use chrono::Utc;
 use sea_orm::{DatabaseConnection, IntoActiveModel, Set};

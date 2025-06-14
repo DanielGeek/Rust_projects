@@ -1,8 +1,8 @@
 use crate::{database::users::Model, utilities::app_error::AppError};
 use crate::{queries::task_queries, routes::tasks::ResponseTask};
 use axum::{
-    Extension, Json,
     extract::{Path, State},
+    Extension, Json,
 };
 use sea_orm::DatabaseConnection;
 

@@ -2,21 +2,22 @@ use crate::{
     database::users::{self, Entity as Users},
     utils::{app_error::AppError, jwt::is_valid},
 };
+use axum::body::Body;
 use axum::{
     extract::State,
-    headers::{authorization::Bearer, Authorization},
     http::{Request, StatusCode},
     middleware::Next,
     response::Response,
-    TypedHeader,
 };
+use axum_extra::extract::TypedHeader;
+use axum_extra::headers::{authorization::Bearer, Authorization};
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 
-pub async fn guard<T>(
+pub async fn guard(
     State(database): State<DatabaseConnection>,
     TypedHeader(token): TypedHeader<Authorization<Bearer>>,
-    mut request: Request<T>,
-    next: Next<T>,
+    mut request: Request<Body>,
+    next: Next,
 ) -> Result<Response, AppError> {
     let token = token.token().to_owned();
 

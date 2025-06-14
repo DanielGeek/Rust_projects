@@ -13,7 +13,7 @@ use axum::{
     extract::FromRef,
     middleware,
     routing::{delete, get, patch, post, put},
-    Extension, Router,
+    Router,
 };
 use create_task::create_task;
 use custom_json_extractor::custom_json_extractor;
@@ -42,10 +42,10 @@ pub async fn create_routes(database: DatabaseConnection) -> Router {
         .route("/custom_json_extractor", post(custom_json_extractor))
         .route("/tasks", post(create_task))
         .route("/tasks", get(get_all_tasks))
-        .route("/tasks/:task_id", get(get_one_task))
-        .route("/tasks/:task_id", put(atomic_update))
-        .route("/tasks/:task_id", patch(partial_update))
-        .route("/tasks/:task_id", delete(delete_task))
+        .route("/tasks/{task_id}", get(get_one_task))
+        .route("/tasks/{task_id}", put(atomic_update))
+        .route("/tasks/{task_id}", patch(partial_update))
+        .route("/tasks/{task_id}", delete(delete_task))
         .route("/users", post(create_user))
         .route("/users/login", post(login))
         .with_state(app_state)

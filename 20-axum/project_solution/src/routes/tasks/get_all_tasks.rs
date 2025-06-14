@@ -1,7 +1,7 @@
 use crate::{
     database::users::Model as UserModel, queries::task_queries, utilities::app_error::AppError,
 };
-use axum::{Extension, Json, extract::State};
+use axum::{extract::State, Extension, Json};
 use sea_orm::DatabaseConnection;
 
 use super::{ResponseDataTasks, ResponseTask};

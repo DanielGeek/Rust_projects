@@ -15,14 +15,14 @@ cargo add serde@1.0.147 -F derive
 ## Help Docker Commands
 
 ```bash
-docker compose up
+docker compose up -d
 docker compose exec database /bin/bash
 psql -U postgres -d postgres
 \dl
 \dt
 select * from tasks;
 exit;
-docker compose down
+docker compose down -v
 docker volume ls
 docker volume rm 20-axum_db-data
 docker compose up -d --wait
@@ -166,8 +166,8 @@ sea-orm-cli generate entity -o src/database
 - [x] *Update Axum to 0.8*
   - [x] *lessons*
     - [x] hello world
-    - [ ] routing
-    - [ ] data
+    - [x] routing
+    - [x] data
   - [x] *project solution*
 - [ ] *Conclusion*
   - [ ] *Next steps*

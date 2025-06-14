@@ -2,12 +2,7 @@ use crate::{
     database::users::{Entity as Users, Model},
     utils::jwt::create_jwt,
 };
-use axum::{
-    extract::State,
-    headers::{authorization::Bearer, Authorization},
-    http::StatusCode,
-    Extension, Json, TypedHeader,
-};
+use axum::{extract::State, http::StatusCode, Extension, Json};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter,
     Set,
