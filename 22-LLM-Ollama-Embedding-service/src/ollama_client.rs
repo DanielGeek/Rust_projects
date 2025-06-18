@@ -6,7 +6,7 @@ use crate::{
     model::{OllamaRequest, OllamaResponse},
     retry_util::retry_with_backoff,
 };
-use anyhow::{Result, anyhow};
+use anyhow::{anyhow, Result};
 
 const BASE_URL: &str = "http://localhost:11434/api";
 

@@ -1,6 +1,7 @@
 use crate::model::OllamaRequest;
 use crate::ollama_client::OllamaClient;
 use log::{error, info};
+mod circuit_breaker;
 mod model;
 mod ollama_client;
 mod retry_util;
