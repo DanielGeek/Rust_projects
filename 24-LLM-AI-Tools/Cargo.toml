@@ -1,0 +1,11 @@
+[package]
+name = "LLM-AI-Tools"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ollama-rs = { version = "0.2.4", features = ["tool-implementations", "macros", "ollama-rs-macros"] }
+reqwest = "0.12.20"
+schemars = { version = "0.9.0", features = ["preserve_order"] }
+serde = { version = "1.0.219", features = ["derive"] }
+tokio = { version = "1.45.1", features = ["full"] }
