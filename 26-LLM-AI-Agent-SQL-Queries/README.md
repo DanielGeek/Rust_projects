@@ -10,3 +10,9 @@ This project is a simple example of how to use Rust to talk with a database.
 
 cargo run
 ```
+
+## Topics
+
+- [x] LLMs
+- [x] PostgreSQL
+- [x] SQL Agent
