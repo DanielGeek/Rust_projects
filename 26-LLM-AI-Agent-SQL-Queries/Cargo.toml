@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.98"
 async-trait = "0.1.86"
+dotenv = "0.15.0"
 ollama-rs = "0.2.5"
 sqlx = { version = "0.8.3", features = ["postgres", "runtime-async-std", "runtime-tokio"] }
 tokio = { version = "1.43.0", features = ["full"] }

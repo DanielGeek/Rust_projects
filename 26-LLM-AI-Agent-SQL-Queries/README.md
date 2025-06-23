@@ -9,6 +9,13 @@ This project is a simple example of how to use Rust to talk with a database.
 ```bash
 
 cargo run
+
+```
+
+## Helpful commands
+
+```bash
+ollama ls
 ```
 
 ## Topics
