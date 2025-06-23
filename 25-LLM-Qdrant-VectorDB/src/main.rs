@@ -5,7 +5,7 @@ use qdrant_client::{
     config::QdrantConfig,
     qdrant::{
         CreateCollectionBuilder, DeleteCollectionBuilder, PointId, PointStruct,
-        ScalarQuantizationBuilder, UpsertPointsBuilder, VectorParamsBuilder,
+        ScalarQuantizationBuilder, SearchPointsBuilder, UpsertPointsBuilder, VectorParamsBuilder,
     },
 };
 use reqwest::Client;
@@ -110,6 +110,14 @@ async fn main() -> Result<(), QdrantError> {
 
     println!("Sucessfully created collection & inserted points");
 
+    let query_text = "Tell me about rust programming language";
+    let query_embedding = generate_embedding_for_text(query_text).await;
+
+    let search_result = qdrant_client
+        .search_points(SearchPointsBuilder::new("documents", query_embedding, 1).with_payload(true))
+        .await?;
+
+    println!("Search result: {:#?}", search_result);
     Ok(())
 }
 
