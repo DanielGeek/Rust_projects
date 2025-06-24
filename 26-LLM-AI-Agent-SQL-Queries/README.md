@@ -8,7 +8,7 @@ This project is a simple example of how to use Rust to talk with a database.
 
 ```bash
 
-cargo run
+cargo run --quiet
 
 ```
 
@@ -16,6 +16,12 @@ cargo run
 
 ```bash
 ollama ls
+```
+
+## SQL Agent Commands
+
+```bash
+get xyz
 ```
 
 ## Topics
