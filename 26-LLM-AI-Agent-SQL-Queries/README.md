@@ -21,7 +21,7 @@ ollama ls
 ## SQL Agent Commands
 
 ```bash
-get xyz
+get Bob Smith address
 ```
 
 ## Topics
