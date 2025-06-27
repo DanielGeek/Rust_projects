@@ -1,4 +1,4 @@
-# Project: Build Stocks Agent AI Tools using Rust
+# Project: Stocks Agent AI Tools using Rust
 
 ## Stack
 
@@ -11,10 +11,17 @@
 
 - [QWQ LLM Ollama](https://ollama.com/library/qwq)
 - [Alphavantage](https://www.alphavantage.co/)
-- [Stock Agent Tool](https://github.com/stock-agent/stock-agent)
 
 ## Helpful commands
 
 ```bash
-ollama run qwq
+ollama ls
+```
+
+```bash
+ollama run qwq:latest
+```
+
+```bash
+cargo run --quiet
 ```
