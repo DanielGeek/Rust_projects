@@ -13,3 +13,27 @@
 ```bash
 cargo run --quiet
 ```
+
+```bash
+ollama ps
+```
+
+```bash
+ollama ls
+```
+
+```bash
+ollama pull gemma3:1b
+```
+
+```bash
+ollama run gemma3:1b
+```
+
+```bash
+ollama pull llama3.2:1b
+```
+
+```bash
+ollama run llama3.2:1b
+```
