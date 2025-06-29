@@ -13,3 +13,7 @@
 ```bash
 cargo run --quiet
 ```
+
+```bash
+cargo build --release --quiet
+```
