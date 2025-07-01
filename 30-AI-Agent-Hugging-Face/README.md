@@ -9,6 +9,10 @@
 
 ## Links
 
+- [Hugging Face Inference API](https://huggingface.co/docs/api-inference/overview)
+- [RAG](https://huggingface.co/docs/rag/overview)
+- [Open Source Models](https://huggingface.co/docs/models/overview)
+
 ## Helpful commands
 
 ```bash
