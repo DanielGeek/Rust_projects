@@ -26,6 +26,7 @@ This repository contains a comprehensive Rust-based API project using Actix-Web.
   - [OpenAPI Documentation](#openapi-documentation)
     - [Adding and Customizing OpenAPI Documentation](#adding-and-customizing-openapi-documentation)
   - [License](#license)
+  - [Help full commands](#help-full-commands)
 
 ## Project Overview
 
@@ -148,3 +149,21 @@ The project supports OpenAPI 3.0, with schema generation and endpoint documentat
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Help full commands
+
+```bash
+    cargo install sqlx-cli --no-default-features --features postgres
+```
+
+```bash
+    sqlx migrate add -r user_table
+```
+
+```bash
+    sqlx database create
+```
+
+```bash
+    sqlx migrate run
+```
