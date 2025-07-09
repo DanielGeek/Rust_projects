@@ -1,15 +1,15 @@
 use actix_web::dev::{Service, ServiceRequest, ServiceResponse, Transform};
 use actix_web::error::{ErrorForbidden, ErrorInternalServerError, ErrorUnauthorized};
-use actix_web::{FromRequest, HttpMessage, http, web};
+use actix_web::{http, web, FromRequest, HttpMessage};
+use futures_util::future::{ready, LocalBoxFuture, Ready};
 use futures_util::FutureExt;
-use futures_util::future::{LocalBoxFuture, Ready, ready};
 use std::rc::Rc;
 use std::task::{Context, Poll};
 
 use crate::db::UserExt;
 use crate::error::{ErrorMessage, ErrorResponse, HttpError};
 use crate::models::{User, UserRole};
-use crate::{AppState, utils};
+use crate::{utils, AppState};
 
 pub struct Authenticated(User);
 

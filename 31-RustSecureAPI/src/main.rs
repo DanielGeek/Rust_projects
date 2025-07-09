@@ -5,6 +5,7 @@ mod dtos;
 mod error;
 mod models;
 mod utils;
+mod handler;
 
 use actix_cors::Cors;
 use actix_web::{
