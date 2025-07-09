@@ -3,9 +3,9 @@ mod config;
 mod db;
 mod dtos;
 mod error;
+mod handler;
 mod models;
 mod utils;
-mod handler;
 
 use actix_cors::Cors;
 use actix_web::{
@@ -18,6 +18,7 @@ use dtos::{
     FilterUserDto, LoginUserDto, RegisterUserDto, Response, UserData, UserListResponseDto,
     UserLoginResponseDto, UserResponseDto,
 };
+use handler::{auth as authHandler, users};
 use sqlx::postgres::PgPoolOptions;
 use utoipa::{
     Modify, OpenApi,
@@ -35,7 +36,9 @@ pub struct AppState {
 
 #[derive(OpenApi)]
 #[openapi(
-    paths(heath_checker_handler),
+    paths(
+        authHandler::login,authHandler::logout,authHandler::register, users::get_me, users::get_users, heath_checker_handler
+    ),
     components(schemas(
         UserData,
         FilterUserDto,
@@ -122,6 +125,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .app_data(web::Data::new(app_state.clone()))
             .wrap(cors)
             .wrap(Logger::default())
+            .service(handler::auth::auth_handler())
+            .service(handler::users::users_handler())
             .service(heath_checker_handler)
             .service(Redoc::with_url("/redoc", openapi.clone()))
             .service(RapiDoc::new("/api-docs/openapi.json").path("/apidoc"))

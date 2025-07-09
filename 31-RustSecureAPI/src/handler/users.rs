@@ -1,13 +1,13 @@
-use actix_web::{HttpResponse, Scope, web};
+use actix_web::{web, HttpResponse, Scope};
 use validator::Validate;
 
 use crate::{
-    AppState,
     auth::{Authenticated, RequireAuth},
     db::UserExt,
     dtos::{FilterUserDto, RequestQueryDto, UserData, UserListResponseDto, UserResponseDto},
     error::HttpError,
     models::UserRole,
+    AppState,
 };
 
 pub fn users_handler() -> Scope {

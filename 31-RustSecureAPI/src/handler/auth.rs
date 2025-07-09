@@ -1,10 +1,11 @@
 use actix_web::{
-    cookie::time::Duration as ActixWebDuration, cookie::Cookie, web, HttpResponse, Responder, Scope,
+    HttpResponse, Responder, Scope, cookie::Cookie, cookie::time::Duration as ActixWebDuration, web,
 };
 use serde_json::json;
 use validator::Validate;
 
 use crate::{
+    AppState,
     auth::RequireAuth,
     db::UserExt,
     dtos::{
@@ -14,7 +15,6 @@ use crate::{
     error::{ErrorMessage, HttpError},
     models::UserRole,
     utils::{password, token},
-    AppState,
 };
 
 pub fn auth_handler() -> Scope {
@@ -48,7 +48,7 @@ pub async fn register(
     body: web::Json<RegisterUserDto>,
 ) -> Result<HttpResponse, HttpError> {
     body.validate()
-        .map_err(|e| HttpError::bat_request(e.to_string()));
+        .map_err(|e| HttpError::bat_request(e.to_string()))?;
 
     let hashed_password =
         password::hash(&body.password).map_err(|e| HttpError::server_error(e.to_string()))?;
@@ -94,7 +94,7 @@ pub async fn login(
     body: web::Json<LoginUserDto>,
 ) -> Result<HttpResponse, HttpError> {
     body.validate()
-        .map_err(|e| HttpError::bat_request(e.to_string()));
+        .map_err(|e| HttpError::bat_request(e.to_string()))?;
 
     let result = app_state
         .db_client
