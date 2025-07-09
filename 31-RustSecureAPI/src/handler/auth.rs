@@ -1,11 +1,10 @@
 use actix_web::{
-    HttpResponse, Responder, Scope, cookie::Cookie, cookie::time::Duration as ActixWebDuration, web,
+    cookie::time::Duration as ActixWebDuration, cookie::Cookie, web, HttpResponse, Responder, Scope,
 };
 use serde_json::json;
 use validator::Validate;
 
 use crate::{
-    AppState,
     auth::RequireAuth,
     db::UserExt,
     dtos::{
@@ -15,6 +14,7 @@ use crate::{
     error::{ErrorMessage, HttpError},
     models::UserRole,
     utils::{password, token},
+    AppState,
 };
 
 pub fn auth_handler() -> Scope {

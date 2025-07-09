@@ -11,7 +11,7 @@ This repository contains a comprehensive Rust-based API project using Actix-Web.
   - [Project Overview](#project-overview)
     - [Key Features](#key-features)
   - [Project Structure](#project-structure)
-- [Setup Instructions](#setup-instructions)
+  - [Setup Instructions](#setup-instructions)
   - [Prerequisites](#prerequisites)
   - [Environment Variables](#environment-variables)
   - [Database Migrations](#database-migrations)
@@ -67,7 +67,7 @@ This project showcases how to build a complete authentication system with Rust, 
 ├── README.md              # Project documentation
 ```
 
-# Setup Instructions
+## Setup Instructions
 
 ## Prerequisites
 
@@ -122,7 +122,7 @@ Each endpoint is protected by JWT-based authentication, ensuring secure access.
 
 Swagger UI is integrated for interactive API exploration and documentation. Access it by navigating to:
 
-<http://localhost:8000/swagger-ui>
+<http://localhost:8000/>
 
 Here, you can view all the available endpoints, along with detailed information on request and response formats.
 

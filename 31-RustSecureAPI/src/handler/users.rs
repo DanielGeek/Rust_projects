@@ -16,7 +16,7 @@ pub fn users_handler() -> Scope {
             "",
             web::get()
                 .to(get_users)
-                .wrap(RequireAuth::allowed_roles(vec![UserRole::Admin])),
+                .wrap(RequireAuth::allowed_roles(vec![UserRole::User, UserRole::Admin])),
         )
         .route(
             "/me",
