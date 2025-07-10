@@ -1,0 +1,109 @@
+{
+	"info": {
+		"_postman_id": "e7b4e074-3710-4d54-8442-93acdf4e776c",
+		"name": "Rust",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6097804",
+		"_collection_link": "https://solar-trinity-660527.postman.co/workspace/My-Workspace~6c54c99e-ebd1-4aa2-8b32-467b0bfbbf86/collection/6097804-e7b4e074-3710-4d54-8442-93acdf4e776c?action=share&source=collection_link&creator=6097804"
+	},
+	"item": [
+		{
+			"name": "Stocks Agent AI Tools using Rust",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey={{alpha_ventage_api_key}}",
+							"protocol": "https",
+							"host": [
+								"www",
+								"alphavantage",
+								"co"
+							],
+							"path": [
+								"query"
+							],
+							"query": [
+								{
+									"key": "function",
+									"value": "TOP_GAINERS_LOSERS"
+								},
+								{
+									"key": "apikey",
+									"value": "{{alpha_ventage_api_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ollama AI Agent",
+			"item": [
+				{
+					"name": "api generate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"model\": \"llama3.2-vision:11b-instruct-fp16\",\n    \"prompt\": \"Tell me what the weather is in Denver, CO\",\n    \"stream\": false,\n    \"raw\": false,\n    \"tools\": [\"get_weather\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:11434/api/generate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "11434",
+							"path": [
+								"api",
+								"generate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api chat",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"model\": \"llama3.1:8b-instruct-fp16\",\n    \"messages\": [\n        {\n            \"role\": \"user\",\n            \"content\": \"Hi, how are you doing today?\"\n        }\n    ],\n    \"stream\": false,\n    \"raw\": false,\n    \"tools\": [\n        {\n            \"type\": \"function\",\n            \"function\": {\n                \"name\": \"get_weather\",\n                \"description\": \"get weather for a giben location\",\n                \"parameters\": {\n                    \"type\": \"object\",\n                    \"location\": {\n                        \"type\": \"string\",\n                        \"description\": \"the location to get the weather, for example 'Denver, CO', 'San Jose, CA', 'New Zealand'\"\n                    },\n                    \"required\": [\n                        \"location\"\n                    ]\n                }\n            }\n        },\n        {\n            \"type\": \"function\",\n            \"function\": {\n                \"name\": \"get_running_programs\",\n                \"description\": \"List the programs running on the users computer\"\n            }\n        },\n        {\n            \"type\": \"function\",\n            \"function\": {\n                \"name\": \"none\",\n                \"description\": \"call this tool if you don't want to call any other tool, Pass in what you would normall state to the user and it will mirror that back out.\",\n                \"parameters\": {\n                    \"type\": \"object\",\n                    \"input\": {\n                        \"type\": \"string\",\n                        \"description\": \"Text that will be mirrored out\"\n                    },\n                    \"required\": [\n                        \"input\"\n                    ]\n                }\n\n            }\n        }\n    ],\n    \"options\": {\n        \"system\": \"You are an AI assistant running in the cloud. You have access to some tools but it is not necessary to call them if the request can be responded to directly.\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:11434/api/chat",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "11434",
+							"path": [
+								"api",
+								"chat"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

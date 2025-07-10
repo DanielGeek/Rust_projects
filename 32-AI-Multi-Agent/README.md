@@ -28,21 +28,31 @@ By the end of this talk you will be
 - Rust
 - Ollama
 
+## Helpful Commands
+
+```bash
+ollama ls
+```
+
+```bash
+ollama run llama3.2-vision:11b-instruct-fp16
+```
+
 ## Research
 
 ### Todo
 
-  - Tool usage with Ollama (pass in tool list. Examples on Insomnia)
-  - Which model to use?
-    - llama 3.18b
-      - chat
-      - tools (correct tool choice)
-    - llama 3.2-vision
-      - chat
-      - vision
-    - llama 3.2 1b
-      - chat
-      - tools (bad tool choice)
+- Tool usage with Ollama (pass in tool list. Examples on Insomnia)
+- Which model to use?
+  - llama 3.18b
+    - chat
+    - tools (correct tool choice)
+  - llama 3.2-vision
+    - chat
+    - vision
+  - llama 3.2 1b
+    - chat
+    - tools (bad tool choice)
 
 ### game assistant
 
@@ -55,7 +65,7 @@ By the end of this talk you will be
 
 - grab image from camera
 
-## Talk 
+## Talk
 
 - Title (download link for slides / code)
 - Main
