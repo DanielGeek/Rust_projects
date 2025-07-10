@@ -31,6 +31,14 @@ By the end of this talk you will be
 ## Helpful Commands
 
 ```bash
+cargo watch -x run
+```
+
+```bash
+cargo run "create a new task to drink water"
+```
+
+```bash
 ollama ls
 ```
 

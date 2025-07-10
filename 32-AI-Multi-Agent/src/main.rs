@@ -1,3 +1,10 @@
+use ai_multi_agent::run;
+
+
 fn main() {
-    println!("Hello, world!");
+    let result = run();
+
+    if let Err(e) = result {
+        eprintln!("Error: {e}");
+    }
 }

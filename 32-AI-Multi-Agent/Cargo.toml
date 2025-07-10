@@ -1,6 +1,11 @@
 [package]
-name = "AI-Multi-Agent"
+name = "ai-multi-agent"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+eyre = "0.6.12"
+
+[workspace]
+members = [
+]
