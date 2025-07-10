@@ -42,7 +42,7 @@ ollama run llama3.2-vision:11b-instruct-fp16
 
 ### Todo
 
-- Tool usage with Ollama (pass in tool list. Examples on Insomnia)
+- Tool usage with Ollama (pass in tool list. Examples on Postman)
 - Which model to use?
   - llama 3.18b
     - chat
