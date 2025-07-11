@@ -28,22 +28,23 @@ struct RequestJson {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct OllamaMessage {
+pub struct OllamaMessage {
     pub role: String,
     pub content: String,
+    pub tool_calls: Option<Vec<Tool>>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct Tool {
     #[serde(rename = "type")]
-    pub tool_type: String,
+    pub tool_type: Option<String>,
     pub function: Function,
 }
 
-#[derive(Debug, Serialize)]
-struct Function {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Function {
     pub name: String,
-    pub description: String,
+    pub description: Option<String>,
 }
 
 fn send_to_ai(config: &Config, user_input: &str) -> Result<()> {
@@ -54,39 +55,47 @@ fn send_to_ai(config: &Config, user_input: &str) -> Result<()> {
         messages: vec![OllamaMessage {
             role: "user".to_owned(),
             content: user_input.to_owned(),
+            tool_calls: None,
         }],
         stream: false,
         raw: false,
         tools: vec![
             Tool {
-                tool_type: "function".to_owned(),
+                tool_type: Some("function".to_owned()),
                 function: Function {
                     name: "create_task".to_owned(),
-                    description:
+                    description: Some(
                         "The user wants to create a new task and insert it into the database."
                             .to_owned(),
+                    ),
                 },
             },
             Tool {
-                tool_type: "function".to_owned(),
+                tool_type: Some("function".to_owned()),
                 function: Function {
                     name: "get_task".to_owned(),
-                    description: "The user wants to retrieve one or more tasks from the database."
-                        .to_owned(),
+                    description: Some(
+                        "The user wants to retrieve one or more tasks from the database."
+                            .to_owned(),
+                    ),
                 },
             },
             Tool {
-                tool_type: "function".to_owned(),
+                tool_type: Some("function".to_owned()),
                 function: Function {
                     name: "update_task".to_owned(),
-                    description: "The user wants to update a task in the database.".to_owned(),
+                    description: Some(
+                        "The user wants to update a task in the database.".to_owned(),
+                    ),
                 },
             },
             Tool {
-                tool_type: "function".to_owned(),
+                tool_type: Some("function".to_owned()),
                 function: Function {
                     name: "delete_task".to_owned(),
-                    description: "The user wants to delete a task in the database.".to_owned(),
+                    description: Some(
+                        "The user wants to delete a task in the database.".to_owned(),
+                    ),
                 },
             },
         ],
@@ -107,5 +116,6 @@ fn send_to_ai(config: &Config, user_input: &str) -> Result<()> {
 
 #[derive(Debug, Deserialize)]
 pub struct OllamaResponse {
+    pub model: String,
     pub message: OllamaMessage,
 }

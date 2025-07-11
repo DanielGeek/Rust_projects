@@ -5,6 +5,6 @@ fn main() {
 
     match run(config) {
         Ok(_) => println!("Thanks for using AI Todo, please come again."),
-        Err(error) => eprintln!("THere was an error using AI Todo :( {error}"),
+        Err(error) => eprintln!("There was an error using AI Todo :( {error}"),
     }
 }
