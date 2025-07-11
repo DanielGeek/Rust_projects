@@ -1,14 +1,21 @@
 use std::io::stdin;
-
+pub mod ai;
+pub mod config;
+pub mod tools;
 use eyre::{Context, Result};
 
-pub fn run() -> Result<()> {
+use config::Config;
+
+use ai::ask_ai_what_tool_to_use;
+
+pub fn run(config: Config) -> Result<()> {
     println!("Welcome to AI Todo agent!");
 
     loop {
         println!("What is your command?");
 
         let user_input = get_user_input()?;
+        let what_to_do = ask_ai_what_tool_to_use(&user_input, &config)?;
 
         println!("You said: '{user_input}'");
     }

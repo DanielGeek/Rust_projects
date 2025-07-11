@@ -1,10 +1,10 @@
-use ai_multi_agent::run;
-
+use ai_multi_agent::{config::Config, run};
 
 fn main() {
-    let result = run();
+    let config = Config::new().unwrap();
 
-    if let Err(e) = result {
-        eprintln!("Error: {e}");
+    match run(config) {
+        Ok(_) => println!("Thanks for using AI Todo, please come again."),
+        Err(error) => eprintln!("THere was an error using AI Todo :( {error}"),
     }
 }
