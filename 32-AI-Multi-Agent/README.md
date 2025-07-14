@@ -31,6 +31,10 @@ By the end of this talk you will be
 ## Helpful Commands
 
 ```bash
+cargo new --lib bb_ollama
+```
+
+```bash
 cargo watch -x run
 ```
 
