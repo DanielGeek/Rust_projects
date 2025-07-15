@@ -16,11 +16,10 @@ pub struct Chat {
 }
 
 impl Chat {
-    pub fn new(model: impl Into<String>) -> Self {
+    pub fn new(model: impl Into<String>, options: Option<ChatRequestOptions>) -> Self {
         let messages = vec![];
         let stream = Some(false);
         let raw = Some(false);
-        let options = None;
 
         Self {
             model: model.into(),
@@ -35,10 +34,8 @@ impl Chat {
         self.messages.push(message);
     }
 
-    pub fn send(&self) -> Result<()> {
-        api::send_to_ollama(&self)?;
-
-        Ok(())
+    pub fn send(&self) -> Result<Message> {
+        api::send_to_ollama(&self)
     }
 }
 
@@ -53,11 +50,17 @@ mod tests {
         };
 
         let model = "llama3.1:8b-instruct-fp16";
-        let mut chat = Chat::new(model);
+        let options = ChatRequestOptions {
+            system: None,
+            seed: Some(123),
+        };
+        let mut chat = Chat::new(model, Some(options));
 
         chat.add_message(message);
 
-        chat.send()?;
+        let message_response = chat.send()?;
+
+        assert_eq!(message_response.content, "How can I assist you today?");
 
         Ok(())
     }

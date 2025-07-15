@@ -6,7 +6,7 @@ use crate::models::{chat_request::Chat, message::Message};
 
 const OLLAMA_CHAT_URL: &str = "http://localhost:11434/api/chat";
 
-pub fn send_to_ollama(chat: &Chat) -> Result<()> {
+pub fn send_to_ollama(chat: &Chat) -> Result<Message> {
     let client = Client::new();
     let request = client
         .post(OLLAMA_CHAT_URL)
@@ -18,9 +18,7 @@ pub fn send_to_ollama(chat: &Chat) -> Result<()> {
         .json::<ChatResponse>()
         .context("Converting response from Ollama to a Chat")?;
 
-    println!("We got the response from Ollama! {chat_response:?}");
-
-    Ok(())
+    Ok(chat_response.message)
 }
 
 #[derive(Debug, Serialize, Deserialize)]
