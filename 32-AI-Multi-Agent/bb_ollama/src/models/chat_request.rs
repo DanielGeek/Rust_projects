@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::api;
 
-use super::{message::Message, options::ChatRequestOptions};
+use super::{message::Message, options::ChatRequestOptions, tool::Tool};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Chat {
@@ -64,4 +64,16 @@ mod tests {
 
         Ok(())
     }
+}
+
+#[test]
+fn can_get_a_tool_call_from_ollama() -> Result<()> {
+    let message = Message::new_user("What is the weather like in New York?");
+    let model = "llama3.1:8b-instruct-fp16";
+    let options = ChatRequestOptions::new().seed(123);
+    let chat = Chat::new(model, Some(options));
+    let tool = Tool {
+        tool_type: "function".to_owned(),
+    }
+    Ok(())
 }
