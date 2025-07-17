@@ -53,6 +53,7 @@ mod tests {
         let message = Message {
             role: crate::models::message::Role::User,
             content: "Hello".to_owned(),
+            tool_calls: None,
         };
 
         let model = "llama3.1:8b-instruct-fp16";
@@ -78,21 +79,40 @@ fn can_get_a_tool_call_from_ollama() -> Result<()> {
     let model = "llama3.1:8b-instruct-fp16";
     let options = ChatRequestOptions::new().seed(123);
     let mut chat = Chat::new(model, Some(options));
+    let weather_tool_name = "check_weather";
     let weather_tool = Tool::new()
-        .function_name("check_weather")
+        .function_name(weather_tool_name)
         .function_description("Get the weather in farhenheit degrees for any given location")
         .add_function_property(
             "location",
-            Property::new_string("location for where you want to check the weather. THis can be city, state, country, zip, or other address that weather.com uses"),
+            Property::new_string(
+                "location for where you want to check the weather. Use the format 'city, state' if the location is in the United States. Otherwise use 'city, country'",
+            ),
         )
         .add_required_property("location")
-        .build().ok_or_eyre("Couldn't build the tool")?;
+        .build()
+        .ok_or_eyre("Couldn't build the tool")?;
 
     chat.add_tool(weather_tool);
     chat.add_message(message);
     let received_message = chat.send()?;
 
+    assert!(received_message.tool_calls.is_some());
     assert_eq!(received_message.content, "");
+
+    let tool_call = received_message.tool_calls.unwrap();
+
+    assert_eq!(tool_call.len(), 1);
+
+    let tool_call = &tool_call[0];
+
+    assert_eq!(tool_call.function.name, weather_tool_name);
+
+    let tool_call_location = tool_call.function.arguments.get("location");
+
+    assert!(tool_call_location.is_some());
+
+    assert_eq!(tool_call_location.unwrap(), "New York, NY");
 
     Ok(())
 }
