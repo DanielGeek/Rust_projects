@@ -1,4 +1,4 @@
-use eyre::{OptionExt, Result};
+use eyre::{Ok, OptionExt, Result};
 use serde::{Deserialize, Serialize};
 
 use crate::{api, models::tool::Property};
@@ -95,6 +95,7 @@ fn can_get_a_tool_call_from_ollama() -> Result<()> {
 
     chat.add_tool(weather_tool);
     chat.add_message(message);
+
     let received_message = chat.send()?;
 
     assert!(received_message.tool_calls.is_some());
@@ -113,6 +114,44 @@ fn can_get_a_tool_call_from_ollama() -> Result<()> {
     assert!(tool_call_location.is_some());
 
     assert_eq!(tool_call_location.unwrap(), "New York, NY");
+
+    Ok(())
+}
+
+#[test]
+fn should_use_info_from_tool_call() -> Result<()> {
+    let message = Message::new_user("What is the weather like in New York?");
+    let model = "llama3.1:8b-instruct-fp16";
+    let options = ChatRequestOptions::new().seed(123);
+    let mut chat = Chat::new(model, Some(options));
+    let weather_tool_name = "check_weather";
+    let weather_tool = Tool::new()
+        .function_name(weather_tool_name)
+        .function_description("Get the weather in farhenheit degrees for any given location")
+        .add_function_property(
+            "location",
+            Property::new_string(
+                "location for where you want to check the weather. Use the format 'city, state' if the location is in the United States. Otherwise use 'city, country'",
+            ),
+        )
+        .add_required_property("location")
+        .build()
+        .ok_or_eyre("Couldn't build the tool")?;
+
+    chat.add_tool(weather_tool);
+    chat.add_message(message);
+
+    let received_message = chat.send()?;
+
+    chat.add_message(received_message);
+    chat.add_message(Message::new_tool("sunny, 55 degrees"));
+
+    let weather_description = chat.send()?;
+
+    assert_eq!(
+        weather_description.content,
+        "Based on the output of the tool call, it appears that the current weather in New York is sunny with a temperature of 55 degrees."
+    );
 
     Ok(())
 }

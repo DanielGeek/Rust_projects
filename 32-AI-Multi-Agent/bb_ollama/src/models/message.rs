@@ -20,6 +20,17 @@ impl Message {
             tool_calls,
         }
     }
+
+    pub fn new_tool(content: impl Into<String>) -> Self {
+        let role = Role::Tool;
+        let tool_calls = None;
+
+        Self {
+            role,
+            content: content.into(),
+            tool_calls,
+        }
+    }
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]

@@ -1,17 +1,17 @@
 ---
 theme: apple-basic
-title: Learn Building AI Agents
+title: Building AI Agents
 transition: fade
 # layout: center
 ---
 
-# Learn LLM based Agents
+## LLM based Agents
 
 ## By making things that have already been solved
 
 ---
 
-# First a question
+## First a question
 
 How many of you code?
 
@@ -20,14 +20,14 @@ How many of you code?
 
 ---
 
-# Objectives
+## Objectives
 
 - To inspire you to create your own agents
   - without Langchain
 
 ---
 
-# AI (LLM) Agents
+## AI (LLM) Agents
 
 ## What do we mean by AI Agents anyways?
 
@@ -44,20 +44,22 @@ to
 layout: image
 image: ./slide_images/demo_screenshot.png
 backgroundSize: contain
+
 ---
 
-# demo - A todo app
+## demo - A todo app
 
 ---
 
 layout: image-right
 image: ./slide_images/high_level_overview.png
 backgroundSize: contain
+
 ---
 
-# How it works from a high level
+## How it works from a high level
 
-**Tech Stack**
+## Tech Stack
 
 - Ollama
 - Rust
@@ -65,7 +67,7 @@ backgroundSize: contain
 
 ---
 
-# The Key, tool calling
+## The Key, tool calling
 
 When using the API, we can tell the LLM that a function exists, what it takes in, and what it will return.
 
@@ -75,21 +77,19 @@ When using the API, we can tell the LLM that a function exists, what it takes in
 
 ---
 
-layout: two-cols
----
+## Tool Calling Example
 
-<div text-center>requesting a tool call from ollama</div>
+### requesting a tool call from ollama
 
-<div mr-1>
 ```json
 {
-  "model": "qwen2:7b-instruct-fp16",
-  "messages": [
+ "model": "qwen2:7b-instruct-fp16",
+ "messages": [
   {
    "role": "user",
    "content": "what is the weather like in Denver, Colorado?"
   }
-  ],
+ ],
  "stream": false,
  "tools": [
   {
@@ -111,10 +111,8 @@ layout: two-cols
  ]
 }
 ```
-</div>
-::right::
 
-<div text-center>response from ollama</div>
+### response from ollama
 
 ```json
 {
@@ -147,7 +145,7 @@ layout: two-cols
 
 ---
 
-# Challenge
+## Challenge
 
 Try creating your own agent without Langchain
 
