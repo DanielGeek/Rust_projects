@@ -1,6 +1,6 @@
 # bb_ollama
 
-A simple Ollama client written in Rust.
+Ollama API crate in the workspace for sending requests to Ollama, running tools, and getting responses.
 
 ## Usage
 
