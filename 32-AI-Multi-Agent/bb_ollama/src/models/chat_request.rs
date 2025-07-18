@@ -1,4 +1,4 @@
-use eyre::{Ok, OptionExt, Result};
+use eyre::{OptionExt, Result};
 use serde::{Deserialize, Serialize};
 
 use crate::{api, models::tool::Property};
