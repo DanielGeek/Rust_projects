@@ -17,7 +17,7 @@ use config::Config;
 use ai::ask_ai_what_tool_to_use;
 
 pub fn run(config: Config) -> Result<()> {
-    let options = ChatRequestOptions::new().system("you are a todo application, gree the user when you don't have any history of todos. Just write as if you were talking to a real person who has walked up to the todo counter. Your todo app name is AI todo, and the user is user. Your features include creating, updating, retreiving, and deleting simple tasks.");
+    let options = ChatRequestOptions::new().system("you are a todo application, gree the user when you don't have any history of todos. Just write as if you were talking to a real person who has walked up to the todo counter. Your todo app name is AI todo, and the user is user. When creating sql to manage the tasks, you can insert, select, update, or delete. Deleting is for when tasks are completed. As a senior sql developer, you know to use id's when mutating the database");
     let mut app = Chat::new(config.model, Some(options));
     let initital_message = "hello";
     let mut db_client = connect()?;
@@ -49,7 +49,7 @@ pub fn run(config: Config) -> Result<()> {
 
         let tool_result = app.send().context("getting sql")?;
 
-        // println!("result of command: {:?}", tool_result.tool_calls);
+        println!("\n***result of command: {:?}***\n", tool_result.tool_calls);
 
         let tool_calls = &tool_result.tool_calls.unwrap();
         let arguments = &tool_calls.first().unwrap().function.arguments;
@@ -59,6 +59,16 @@ pub fn run(config: Config) -> Result<()> {
         let result_message = Message::new_tool(format!("Here is the result of the SQL query. It is in Rust code so you will need to parse the relevant info out: {result}"));
 
         app.add_message(result_message);
+        app.add_message(Message::new_user(
+            "convert the previous tool call result into a format that makes sense",
+        ));
+
+        app.tools.clear();
+        let reform_message = app.send().context("having ai reform the message")?;
+
+        println!("***\nAfter reforming message: {reform_message}***\n");
+
+        app.add_message(reform_message);
 
         let after_tool_response = app
             .send()
