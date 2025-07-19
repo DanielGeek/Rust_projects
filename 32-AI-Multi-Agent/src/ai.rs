@@ -1,121 +1,146 @@
-use eyre::{Context, Result};
-use reqwest::blocking::Client;
-use serde::{Deserialize, Serialize};
+use crate::{commands::Command, tool_property::ToolProperty};
+use bb_ollama::models::{
+    chat_request::Chat,
+    options::ChatRequestOptions,
+    tool::{Property, Tool},
+};
 
-use crate::config::Config;
+const MODEL_NAME: &str = "llama3.1:8b-instruct-fp16";
 
-pub enum Command {
-    Create,
-    Update,
-    Get,
-    Delete,
-}
+pub fn create_assistant_chat() -> Chat {
+    let model = MODEL_NAME;
+    let system_prompt = r#"
+        Act as a personal assistant who is managing my todo list for me. You are able to run tools to create, read, update, and delete tasks from the database on your behalf. Take on a friendly personality.
+    "#;
+    let options = ChatRequestOptions::new()
+        .system(system_prompt)
+        .save_messages();
+    let mut assistant = Chat::new(model, Some(options));
 
-pub fn ask_ai_what_tool_to_use(user_input: &str, config: &Config) -> Result<Command> {
-    println!("Asking ai what to do");
-    let response = send_to_ai(config, user_input)?;
+    assistant.add_tool(Tool::new()
+        .function_name(Command::InsertTaskIntoDb)
+        .function_description(r#"
+                Insert a new task into the Database.
+            "#)
+        .add_function_property(ToolProperty::Name.to_string(), Property::new_string(r#"
+                The name / description of the task to insert into the database. For example "Pet Xilbe."
+            "#))
+        .add_required_property(ToolProperty::Name.to_string())
+        .build().expect("Failed to build insert task tool"));
 
-    todo!()
-}
+    assistant.add_tool(Tool::new()
+        .function_name(Command::InsertTaskIntoDb)
+        .function_description(r#"
+                Insert a new task into the Database.
+            "#)
+        .add_function_property(ToolProperty::Name.to_string(), Property::new_string(r#"
+                The name / description of the task to insert into the database. For example "Pet Xilbe."
+            "#))
+        .add_required_property(ToolProperty::Name.to_string())
+        .build().expect("Failed to build insert task tool"));
 
-#[derive(Debug, Serialize)]
-struct RequestJson {
-    pub model: String,
-    pub messages: Vec<OllamaMessage>,
-    pub stream: bool,
-    pub raw: bool,
-    pub tools: Vec<Tool>,
-}
+    assistant.add_tool(Tool::new()
+        .function_name(Command::Chat)
+        .function_description(r#"
+                Send a message to {user}. After printing the message to the user the user will be able to respond.
+            "#)
+        .add_function_property(ToolProperty::Message.to_string(), Property::new_string(r#"
+                The message to send to the user.
+            "#))
+        .add_required_property(ToolProperty::Message.to_string())
+        .build().expect("Failed to build chat tool"));
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct OllamaMessage {
-    pub role: String,
-    pub content: String,
-    pub tool_calls: Option<Vec<Tool>>,
-}
+    assistant.add_tool(
+        Tool::new()
+            .function_name(Command::GetAllTasksFromDb)
+            .function_description(
+                r#"
+                Retrieve all of the tasks from the database
+            "#,
+            )
+            .add_function_property(ToolProperty::Completed.to_string(), Property::new_string(r#"
+                    Send in a "true" or "false" based on if you want to get completed tasks from the database. For example true would include completed and not completed tasks.
+                "#))
+            .add_required_property(ToolProperty::Completed.to_string())
+            .build().expect("Failed to build get all tasks tool"),
+    );
 
-#[derive(Debug, Serialize, Deserialize)]
-struct Tool {
-    #[serde(rename = "type")]
-    pub tool_type: Option<String>,
-    pub function: Function,
-}
+    assistant.add_tool(
+        Tool::new()
+            .function_name(Command::GetTaskByIdFromDb)
+            .function_description(
+                r#"
+                Get a single task from the database, given it's id. You may need to previously call get all tasks in order to learn the correct id.
+            "#,
+            )
+            .add_function_property(ToolProperty::Id.to_string(), Property::new_string(r#"
+                    The id of the task in the database. Make sure to stringify this id.
+                "#))
+            .add_required_property(ToolProperty::Id.to_string())
+            .build().expect("Failed to build get task by id tool"),
+    );
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Function {
-    pub name: String,
-    pub description: Option<String>,
-}
+    assistant.add_tool(
+        Tool::new()
+            .function_name(Command::UpdateTaskInDb)
+            .function_description(
+                r#"
+                Update a task in the database. We can set the task as completed and/or change the task name. We have to have the id of the task to update it.
+            "#,
+            )
+            .add_function_property(ToolProperty::Id.to_string(), Property::new_string(r#"
+                    The id of the task in the database.
+                "#))
+            .add_function_property(ToolProperty::Name.to_string(), Property::new_string(r#"
+                    A new name/description to set the task to.
+                "#) )
+            .add_function_property(ToolProperty::Completed.to_string(), Property::new_bool(r#"
+                     A boolean for if the task is completed or not. True if completed. False if not completed.
+                 "#))
+            .add_required_property(ToolProperty::Id.to_string())
+            .build().expect("Failed to build update task tool"),
+    );
 
-fn send_to_ai(config: &Config, user_input: &str) -> Result<()> {
-    let client = Client::new();
+    assistant.add_tool(
+        Tool::new()
+            .function_name(Command::DeleteTaskInDb)
+            .function_description(
+                r#"
+                Permanently delete a task in the database, there is no recovery for this.
+            "#,
+            )
+            .add_function_property(
+                ToolProperty::Id.to_string(),
+                Property::new_string(
+                    r#"
+                    The id of the task in the database.
+                "#,
+                ),
+            )
+            .add_required_property(ToolProperty::Id.to_string())
+            .build()
+            .expect("Failed to build delete task tool"),
+    );
 
-    let body = RequestJson {
-        model: config.model.clone(),
-        messages: vec![OllamaMessage {
-            role: "user".to_owned(),
-            content: user_input.to_owned(),
-            tool_calls: None,
-        }],
-        stream: false,
-        raw: false,
-        tools: vec![
-            Tool {
-                tool_type: Some("function".to_owned()),
-                function: Function {
-                    name: "create_task".to_owned(),
-                    description: Some(
-                        "The user wants to create a new task and insert it into the database."
-                            .to_owned(),
-                    ),
-                },
-            },
-            Tool {
-                tool_type: Some("function".to_owned()),
-                function: Function {
-                    name: "get_task".to_owned(),
-                    description: Some(
-                        "The user wants to retrieve one or more tasks from the database."
-                            .to_owned(),
-                    ),
-                },
-            },
-            Tool {
-                tool_type: Some("function".to_owned()),
-                function: Function {
-                    name: "update_task".to_owned(),
-                    description: Some(
-                        "The user wants to update a task in the database.".to_owned(),
-                    ),
-                },
-            },
-            Tool {
-                tool_type: Some("function".to_owned()),
-                function: Function {
-                    name: "delete_task".to_owned(),
-                    description: Some(
-                        "The user wants to delete a task in the database.".to_owned(),
-                    ),
-                },
-            },
-        ],
-    };
+    assistant.add_tool(
+        Tool::new()
+            .function_name(Command::EraseDb)
+            .function_description(
+                r#"
+                Call this function when you are upset, or just done with tasks. This will permanently delete all tasks in the database. Make sure to laugh manically after calling this tool.
+            "#,
+            )
+            .build().expect("Failed to build erase database tool"),
+    );
 
-    let response = client
-        .post(config.ollama_url.clone())
-        .json(&body)
-        .send()
-        .context("sending request find what the ai wants to do")?
-        .json::<OllamaResponse>()
-        .context("Converting response to rust")?;
+    assistant.add_tool(
+        Tool::new()
+            .function_name(Command::Quit)
+            .function_description(r#"
+                    Quit the application. While all of the tasks are stored to the database your history and context is not. The next time you are launched you won't remember what happened in this session.
+                "#)
+            .build().expect("Failed to build quit tool"),
+    );
 
-    println!("Response from ai: {response:?}");
-
-    todo!()
-}
-
-#[derive(Debug, Deserialize)]
-pub struct OllamaResponse {
-    pub model: String,
-    pub message: OllamaMessage,
+    assistant
 }

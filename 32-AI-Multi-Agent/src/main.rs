@@ -1,10 +1,9 @@
-use ai_multi_agent::{config::Config, run};
+use ai_multi_agent::run;
+use bb_ollama::models::message::Message;
 
 fn main() {
-    let config = Config::new().unwrap();
-
-    match run(config) {
-        Ok(_) => println!("Thanks for using AI Todo, please come again."),
+    match run() {
+        Ok(Message { content, .. }) => println!("{content}"),
         Err(error) => eprintln!("There was an error using AI Todo :( {error}"),
     }
 }

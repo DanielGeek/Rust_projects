@@ -1,7 +1,7 @@
 use std::env;
 
 use eyre::{Context, Result};
-use postgres::{Client, NoTls};
+pub use postgres::{Client, NoTls};
 
 pub fn connect() -> Result<Client> {
     dotenvy::dotenv().ok();
@@ -12,9 +12,22 @@ pub fn connect() -> Result<Client> {
 }
 
 pub fn run_query(db: &mut Client, sql: &str) -> Result<String> {
-    let result = db.simple_query(sql).context("running query")?;
+    let result = db.query(sql, &[]).context("running query")?;
 
-    println!("\n***The result of the query is: '{result:?}'***\n");
+    Ok(format!(
+        "The SQl query ```{sql}``` resulted in ```{result:?}``` from the database"
+    ))
+}
 
-    Ok(format!("{result:?}"))
+pub fn insert(db: &mut Client, name: &str) -> Result<i32> {
+    let result = db
+        .query_one(
+            "INSERT INTO tasks (name) values ($1) RETURNING id",
+            &[&name],
+        )
+        .context("Inserting into database")?;
+
+    let created_id = result.get::<_, i32>("id");
+
+    Ok(created_id)
 }
