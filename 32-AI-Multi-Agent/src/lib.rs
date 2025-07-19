@@ -9,6 +9,7 @@ use bb_ollama::models::{
     options::ChatRequestOptions,
     tool::{Property, Tool},
 };
+use db::connect;
 use eyre::{Context, OptionExt, Result};
 
 use config::Config;
@@ -19,6 +20,7 @@ pub fn run(config: Config) -> Result<()> {
     let options = ChatRequestOptions::new().system("you are a todo application, gree the user when you don't have any history of todos. Just write as if you were talking to a real person who has walked up to the todo counter. Your todo app name is AI todo, and the user is user. Your features include creating, updating, retreiving, and deleting simple tasks.");
     let mut app = Chat::new(config.model, Some(options));
     let initital_message = "hello";
+    let mut db_client = connect()?;
 
     app.add_message(Message::new_user(initital_message));
 
@@ -31,7 +33,7 @@ pub fn run(config: Config) -> Result<()> {
     loop {
         let user_input = get_user_input().context("getting user input")?;
 
-        println!("user input: {user_input}");
+        // println!("user input: {user_input}");
 
         let user_message = Message::new_user(user_input);
 
@@ -39,20 +41,35 @@ pub fn run(config: Config) -> Result<()> {
 
         app
             .add_tool(Tool::new().function_name("run_sql")
-            .function_description("Run a SQL command for a postgres database that has a single table named tasks. The table has the following columns: id: int, name: text.")
-            .add_function_property("sql", Property::new_string("The SQL to be run on the database"))
+            .function_description("Run a SQL command for a postgres database that has a single table named tasks. The table has the following columns: id: int, name: text. The id is auto generated when creating, please try your best to let the database set the id when creating")
+            .add_function_property("sql", Property::new_string("The SQL to be run on the database, make sure that you include the ; otherwise it won't run"))
             .add_required_property("sql")
             .build()
             .ok_or_eyre("Adding tool")?);
 
         let tool_result = app.send().context("getting sql")?;
 
-        println!("result of command: {:?}", tool_result.tool_calls);
+        // println!("result of command: {:?}", tool_result.tool_calls);
 
-        panic!();
+        let tool_calls = &tool_result.tool_calls.unwrap();
+        let arguments = &tool_calls.first().unwrap().function.arguments;
+        let sql = arguments.get("sql").unwrap();
+
+        let result = db::run_query(&mut db_client, sql).context("running query from ai")?;
+        let result_message = Message::new_tool(format!("Here is the result of the SQL query. It is in Rust code so you will need to parse the relevant info out: {result}"));
+
+        app.add_message(result_message);
+
+        let after_tool_response = app
+            .send()
+            .context("asking ai for response after sql was run")?;
+
+        println!("{after_tool_response}");
+
+        println!("\n")
     }
 
-    Ok(())
+    // Ok(())
 }
 
 fn get_user_input() -> Result<String> {

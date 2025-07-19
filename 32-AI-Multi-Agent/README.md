@@ -27,8 +27,25 @@ By the end of this talk you will be
 
 - Rust
 - Ollama
+- Postgres
 
 ## Helpful Commands
+
+```bash
+create table tasks (id serial primary key, name text not null);
+```
+
+```bash
+docker exec -ti ai_postgres psql -U postgres
+```
+
+```bash
+cargo new --lib db
+```
+
+```bash
+docker run -d --name ai_postgres -e POSTGRES_PASSWORD=keyboardcat -v ai_postgres:/var/lib/postgresql/data -p 9432:5432 postgres
+```
 
 ```bash
 cargo new --lib bb_ollama
@@ -90,6 +107,7 @@ ollama run llama3.2-vision:11b-instruct-fp16
       - Ollama
       - llama 3.2?
 - Conclusion
+
   - Summary
     - why silly ai projects are amazing
   - About me / Download talk and code
