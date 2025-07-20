@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, fmt::Display};
 
 use eyre::{Context, Result};
 pub use postgres::{Client, NoTls};
@@ -30,4 +30,35 @@ pub fn insert(db: &mut Client, name: &str) -> Result<i32> {
     let created_id = result.get::<_, i32>("id");
 
     Ok(created_id)
+}
+
+pub fn get_all_tasks(db: &mut Client) -> Result<Vec<DbTask>> {
+    let results = db
+        .query("SELECT * FROM tasks;", &[])
+        .context("running query")?;
+
+    Ok(results
+        .into_iter()
+        .map(|row| DbTask {
+            id: row.get::<_, i32>("id"),
+            name: row.get::<_, String>("name"),
+            completed: row.get::<_, bool>("completed"),
+        })
+        .collect())
+}
+
+pub struct DbTask {
+    pub id: i32,
+    pub name: String,
+    pub completed: bool,
+}
+
+impl Display for DbTask {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "id: {}, name: {}, completed: {}",
+            self.id, self.name, self.completed
+        )
+    }
 }
