@@ -32,6 +32,10 @@ By the end of this talk you will be
 ## Helpful Commands
 
 ```bash
+cargo run -F log_all
+```
+
+```bash
 create table tasks (id serial primary key, name text not null);
 ```
 
