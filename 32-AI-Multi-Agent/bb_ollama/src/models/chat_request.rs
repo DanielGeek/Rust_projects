@@ -91,8 +91,7 @@ mod tests {
             .function_description("Get the weather in farhenheight degrees for any given location")
             .add_function_property("location", Property::new_string("location for where you want to check the weather. Use the format 'city, state' if the location is in the United States. Otherwise use 'city, country'"))
             .add_required_property("location")
-            .build()
-            .expect("Failed to build weather tool");
+            .build();
 
         chat.add_tool(weather_tool);
         chat.add_message(message);
@@ -130,8 +129,7 @@ mod tests {
             .function_description("Get the weather in farhenheight degrees for any given location")
             .add_function_property("location", Property::new_string("location for where you want to check the weather. Use the format 'city, state' if the location is in the United States. Otherwise use 'city, country'"))
             .add_required_property("location")
-            .build()
-            .expect("Failed to build weather tool");
+            .build();
 
         chat.add_tool(weather_tool);
         chat.add_message(message);

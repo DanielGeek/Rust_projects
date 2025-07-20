@@ -5,7 +5,7 @@ use bb_ollama::models::{
     tool::{Property, Tool},
 };
 
-const MODEL_NAME: &str = "llama3.1:8b-instruct-fp16";
+const MODEL_NAME: &str = "qwen2:7b-instruct-fp16";
 
 pub fn create_assistant_chat() -> Chat {
     let model = MODEL_NAME;
@@ -14,7 +14,8 @@ pub fn create_assistant_chat() -> Chat {
     "#;
     let options = ChatRequestOptions::new()
         .system(system_prompt)
-        .save_messages();
+        .save_messages()
+        .temperature(0.7);
     let mut assistant = Chat::new(model, Some(options));
 
     assistant.add_tool(Tool::new()
@@ -22,33 +23,18 @@ pub fn create_assistant_chat() -> Chat {
         .function_description(r#"
                 Insert a new task into the Database.
             "#)
-        .add_function_property(ToolProperty::Name.to_string(), Property::new_string(r#"
+        .add_function_property(ToolProperty::Name, Property::new_string(r#"
                 The name / description of the task to insert into the database. For example "Pet Xilbe."
-            "#))
-        .add_required_property(ToolProperty::Name.to_string())
-        .build().expect("Failed to build insert task tool"));
-
-    assistant.add_tool(Tool::new()
-        .function_name(Command::InsertTaskIntoDb)
-        .function_description(r#"
-                Insert a new task into the Database.
-            "#)
-        .add_function_property(ToolProperty::Name.to_string(), Property::new_string(r#"
-                The name / description of the task to insert into the database. For example "Pet Xilbe."
-            "#))
-        .add_required_property(ToolProperty::Name.to_string())
-        .build().expect("Failed to build insert task tool"));
+            "#)).add_required_property(ToolProperty::Name).build());
 
     assistant.add_tool(Tool::new()
         .function_name(Command::Chat)
         .function_description(r#"
                 Send a message to {user}. After printing the message to the user the user will be able to respond.
             "#)
-        .add_function_property(ToolProperty::Message.to_string(), Property::new_string(r#"
+        .add_function_property(ToolProperty::Message, Property::new_string(r#"
                 The message to send to the user.
-            "#))
-        .add_required_property(ToolProperty::Message.to_string())
-        .build().expect("Failed to build chat tool"));
+            "#)).add_required_property(ToolProperty::Message).build());
 
     assistant.add_tool(
         Tool::new()
@@ -58,11 +44,11 @@ pub fn create_assistant_chat() -> Chat {
                 Retrieve all of the tasks from the database
             "#,
             )
-            .add_function_property(ToolProperty::Completed.to_string(), Property::new_string(r#"
+            .add_function_property(ToolProperty::Completed, Property::new_string(r#"
                     Send in a "true" or "false" based on if you want to get completed tasks from the database. For example true would include completed and not completed tasks.
                 "#))
-            .add_required_property(ToolProperty::Completed.to_string())
-            .build().expect("Failed to build get all tasks tool"),
+            .add_required_property(ToolProperty::Completed)
+            .build(),
     );
 
     assistant.add_tool(
@@ -73,11 +59,11 @@ pub fn create_assistant_chat() -> Chat {
                 Get a single task from the database, given it's id. You may need to previously call get all tasks in order to learn the correct id.
             "#,
             )
-            .add_function_property(ToolProperty::Id.to_string(), Property::new_string(r#"
+            .add_function_property(ToolProperty::Id, Property::new_string(r#"
                     The id of the task in the database. Make sure to stringify this id.
                 "#))
-            .add_required_property(ToolProperty::Id.to_string())
-            .build().expect("Failed to build get task by id tool"),
+            .add_required_property(ToolProperty::Id)
+            .build(),
     );
 
     assistant.add_tool(
@@ -88,17 +74,17 @@ pub fn create_assistant_chat() -> Chat {
                 Update a task in the database. We can set the task as completed and/or change the task name. We have to have the id of the task to update it.
             "#,
             )
-            .add_function_property(ToolProperty::Id.to_string(), Property::new_string(r#"
+            .add_function_property(ToolProperty::Id, Property::new_string(r#"
                     The id of the task in the database.
                 "#))
-            .add_function_property(ToolProperty::Name.to_string(), Property::new_string(r#"
+            .add_function_property(ToolProperty::Name, Property::new_string(r#"
                     A new name/description to set the task to.
                 "#) )
-            .add_function_property(ToolProperty::Completed.to_string(), Property::new_bool(r#"
-                     A boolean for if the task is completed or not. True if completed. False if not completed.
-                 "#))
-            .add_required_property(ToolProperty::Id.to_string())
-            .build().expect("Failed to build update task tool"),
+            .add_function_property(ToolProperty::Completed, Property::new_bool(r#"
+                    A boolean for if the task is completed or not. True if completed. False if not completed.
+                "#))
+            .add_required_property(ToolProperty::Id)
+            .build(),
     );
 
     assistant.add_tool(
@@ -110,16 +96,15 @@ pub fn create_assistant_chat() -> Chat {
             "#,
             )
             .add_function_property(
-                ToolProperty::Id.to_string(),
+                ToolProperty::Id,
                 Property::new_string(
                     r#"
                     The id of the task in the database.
                 "#,
                 ),
             )
-            .add_required_property(ToolProperty::Id.to_string())
-            .build()
-            .expect("Failed to build delete task tool"),
+            .add_required_property(ToolProperty::Id)
+            .build(),
     );
 
     assistant.add_tool(
@@ -130,7 +115,7 @@ pub fn create_assistant_chat() -> Chat {
                 Call this function when you are upset, or just done with tasks. This will permanently delete all tasks in the database. Make sure to laugh manically after calling this tool.
             "#,
             )
-            .build().expect("Failed to build erase database tool"),
+            .build(),
     );
 
     assistant.add_tool(
@@ -139,7 +124,7 @@ pub fn create_assistant_chat() -> Chat {
             .function_description(r#"
                     Quit the application. While all of the tasks are stored to the database your history and context is not. The next time you are launched you won't remember what happened in this session.
                 "#)
-            .build().expect("Failed to build quit tool"),
+            .build()
     );
 
     assistant

@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Tool {
@@ -40,24 +39,28 @@ impl ToolBuilder {
         self
     }
 
-    pub fn add_function_property(mut self, name: impl Into<String>, property: Property) -> Self {
-        self.properties.insert(name.into(), property);
+    pub fn add_function_property(mut self, name: impl ToString, property: Property) -> Self {
+        self.properties.insert(name.to_string(), property);
 
         self
     }
 
-    pub fn add_required_property(mut self, property_name: impl Into<String>) -> Self {
-        self.required_properties.push(property_name.into());
+    pub fn add_required_property(mut self, property_name: impl ToString) -> Self {
+        self.required_properties.push(property_name.to_string());
 
         self
     }
 
-    pub fn build(self) -> Option<Tool> {
+    pub fn build(self) -> Tool {
         let tool = Tool {
             tool_type: "function".to_owned(),
             function: Function {
-                name: self.function_name?,
-                description: self.function_description?,
+                name: self
+                    .function_name
+                    .expect("Missing function name when building tool"),
+                description: self
+                    .function_description
+                    .expect("Missing description when building tool"),
                 parameters: Parameter {
                     parameter_type: "object".to_owned(),
                     properties: self.properties,
@@ -66,7 +69,7 @@ impl ToolBuilder {
             },
         };
 
-        Some(tool)
+        tool
     }
 }
 
@@ -102,8 +105,11 @@ impl Property {
 
     pub fn new_bool(description: impl Into<String>) -> Self {
         Self {
-            property_type: PropertyType::Bool,
-            description: description.into(),
+            property_type: PropertyType::String,
+            description: format!(
+                "{}. Note Be sure to set this property as a stringified version of a boolean",
+                description.into()
+            ),
         }
     }
 }

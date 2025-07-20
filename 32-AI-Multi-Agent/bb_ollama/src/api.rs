@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use eyre::{Context, Result};
 use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
@@ -11,17 +13,17 @@ pub fn send_to_ollama(chat: &Chat) -> Result<Message> {
     let request = client
         .post(OLLAMA_CHAT_URL)
         .json(chat)
+        .timeout(Duration::from_secs(60 * 15))
         .send()
-        .context("Sending chat to Ollama")?;
-
+        .context("Sending message to Ollama")?;
     let chat_response = request
         .json::<ChatResponse>()
-        .context("Converting response from Ollama to a Chat")?;
+        .context("converting response from Ollama to a Chat")?;
 
     Ok(chat_response.message)
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ChatResponse {
     pub model: String,
     pub message: Message,

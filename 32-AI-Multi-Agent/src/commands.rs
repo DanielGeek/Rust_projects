@@ -1,6 +1,8 @@
 use bb_ollama::models::message::Message;
 use std::{collections::HashMap, fmt::Display};
 
+use crate::logger::loggit;
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum Command {
     InsertTaskIntoDb,
@@ -11,40 +13,32 @@ pub enum Command {
     EraseDb,
     Chat,
     Quit,
+    Unknown,
 }
 
 impl Command {
     pub fn from_message(message: &Message) -> (Self, HashMap<String, String>) {
         if message.content.is_empty() {
             let Some(tool_calls) = &message.tool_calls else {
-                return (
-                    Self::Chat,
-                    HashMap::from([(
-                        "error".to_string(),
-                        "I'm sorry, but I didn't understand what you said, please try again".to_string(),
-                    )]),
-                );
+                return (Self::Chat, HashMap::new());
             };
             let Some(tool_call) = tool_calls.first() else {
-                return (
-                    Self::Chat,
-                    HashMap::from([(
-                        "error".to_string(),
-                        "I'm sorry, but I didn't understand what you said, please try again".to_string(),
-                    )]),
-                );
+                return (Self::Chat, HashMap::new());
             };
             let function = &tool_call.function;
             let name = &function.name;
             let command = Self::from(name.as_str());
-            let arguments = function.arguments.clone();
 
-            (command, arguments)
+            loggit(
+                format!("Arguments from AI: {:?}", function.arguments),
+                crate::logger::LogLevel::Debug,
+            );
+
+            (command, function.arguments.clone())
         } else {
-            (
-                Self::Chat,
-                HashMap::from([("message".to_string(), message.content.clone())]),
-            )
+            let mut arguments = HashMap::new();
+            arguments.insert("message".to_owned(), message.content.clone());
+            (Self::Chat, arguments)
         }
     }
 }
@@ -65,7 +59,14 @@ impl From<&str> for Command {
             "delete_task_in_db" => Self::DeleteTaskInDb,
             "erase_db" => Self::EraseDb,
             "quit" => Self::Quit,
-            _ => Self::Chat,
+            "chat" => Self::Chat,
+            _ => {
+                loggit(
+                    format!("Got an unknown command: '{value}'"),
+                    crate::logger::LogLevel::Error,
+                );
+                Self::Unknown
+            }
         }
     }
 }
@@ -81,6 +82,7 @@ impl Display for Command {
             Command::DeleteTaskInDb => "delete_task_in_db",
             Command::EraseDb => "erase_db",
             Command::Quit => "quit",
+            Command::Unknown => "unknown",
         };
 
         write!(f, "{command}")
