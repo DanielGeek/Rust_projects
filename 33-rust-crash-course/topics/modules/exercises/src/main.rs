@@ -28,7 +28,22 @@ mod util {
     }
 }
 
+use my_modules::my;
+use my_modules::foo;
+
 fn main() {
-    util::log::debug(&format!("min: {}", math::min(1, 2)));
-    util::log::debug(&format!("max: {}", math::max(1, 2)));
+    // Call the main function from the my module
+    my::main();
+    
+    // Call the print function from the foo module
+    foo::print();
+    
+    // You can also directly access other public functions
+    println!("--- Direct calls ---");
+    my::print();
+    my::a::print();
+    println!("Built: {}", my::a::build(42));
+
+    // util::log::debug(&format!("min: {}", math::min(1, 2)));
+    // util::log::debug(&format!("max: {}", math::max(1, 2)));
 }
