@@ -4,3 +4,14 @@
 - 🧠 Ollama for AI/LLM
 - ⚛️ React for frontend
 - ⚙️ Rust for business logic
+
+## Setup
+
+### Backend
+
+```bash
+
+cd llm-playground-backend
+
+cargo run
+```

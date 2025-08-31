@@ -1,3 +1,5 @@
+use llm_playground_lib::run;
+
 fn main() {
-    println!("Hello, world!");
+    run();
 }
