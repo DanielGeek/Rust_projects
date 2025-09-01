@@ -35,6 +35,7 @@ Each project folder is numbered for organization and represents a focused effort
 | 31  | RustSecureAPI             | Secure Rust-based API with user authentication & roles. |
 | 32  | AI-Multi-Agent            | Multi-agent architecture powered by LLMs with chat modules and agent models. |
 | 33  | rust-crash-course         | **Comprehensive Rust Crash Course with exercises, solutions, and resources.** |
+| 34  | tauri-llm-playground      | **Build your own LLM Playground with (Tauri2.0 + Rust) 🚀.** |
 
 ---
 
