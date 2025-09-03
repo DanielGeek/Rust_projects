@@ -2,44 +2,87 @@
 
 ## Helpfull commands
 
-```bash
-cargo new --bin TCP_Rust
-```
+## 1️⃣ Create a new Rust project
 
-```bash
-cargo b --release
-```
+docker-compose up --build # Build the Docker image and start the container
 
-## Build the image
+## Inside the container
 
-```bash
-docker-compose build
-```
+cargo new --bin TCP_Rust  # Creates a new Rust project with src/main.rs
 
-## Run the container
+## 2️⃣ Build the project in release mode
 
-```bash
-docker-compose up
-```
+cargo build --release  # Binary located at target/release/TCP_Rust
 
-## If you want to go in and test things manually
+## 3️⃣ Build the Docker image
 
-```bash
-docker-compose run --rm tcp_rust bash
-```
+docker-compose build  # Build image from Dockerfile with dependencies
 
-```bash
-ifconfig | grep inet
-```
+## 4️⃣ Start the container in foreground
 
-```bash
-ipconfig getifaddr en0
-```
+docker-compose up  # Creates tun0, assigns IP, activates it, runs Rust binary
 
-```bash
-networksetup -getinfo Wi-Fi
-```
+## 5️⃣ Start the container in background (detached mode)
 
-```bash
-sudo ifconfig utun0 inet 192.168.0.1 192.168.0.1 netmask 255.255.255.0 up
-```
+docker-compose up -d  # Run container in background
+
+## 6️⃣ Stop the container
+
+docker-compose down  # Stops container and network
+
+## 7️⃣ Remove containers, images, volumes, and rebuild
+
+docker-compose down --rmi all --volumes --remove-orphans  # Clean all
+docker-compose build  # Rebuild image
+docker-compose up  # Start container again
+
+## 8️⃣ Open a shell inside the container for manual testing
+
+docker-compose run --rm tcp_rust bash  # Interactive container shell
+
+## 9️⃣ Check running containers
+
+docker ps  # Shows active containers
+
+## 🔟 Check container logs
+
+docker logs tcp_rust_app  # View container output
+
+## 11️⃣ List all network interfaces and IPs on macOS
+
+ifconfig | grep inet  # Shows IP addresses
+
+## 12️⃣ Get Wi-Fi interface IP
+
+ipconfig getifaddr en0  # Get en0 (Wi-Fi) IP address
+
+## 13️⃣ Get detailed Wi-Fi info
+
+networksetup -getinfo Wi-Fi  # Shows network configuration
+
+## 14️⃣ Assign IP to TUN interface manually if needed
+
+sudo ifconfig utun0 inet 192.168.0.1 192.168.0.1 netmask 255.255.255.0 up  # Assign and activate
+
+## 15️⃣ Activate TUN interface manually if needed
+
+sudo ifconfig utun0 up  # Just bring interface up
+
+## 16️⃣ Clone the repository
+
+git clone [https://github.com/yourusername/TCP_Rust.git](https://github.com/yourusername/TCP_Rust.git)  # Clone repo
+cd TCP_Rust  # Enter project folder
+
+## 17️⃣ Pull latest changes
+
+git pull origin main  # Update local repo
+
+## 18️⃣ Check local changes
+
+git status  # View modified/untracked files
+
+## 19️⃣ Add and commit changes
+
+git add .  # Stage changes
+git commit -m "Your commit message"  # Commit changes
+git push origin main  # Push to remote

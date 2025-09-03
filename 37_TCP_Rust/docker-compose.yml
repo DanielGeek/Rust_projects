@@ -11,4 +11,3 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun
-    command: cargo run --release
