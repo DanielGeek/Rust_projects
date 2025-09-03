@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  tcp_rust:
+    build: .
+    container_name: tcp_rust_app
+    working_dir: /app
+    volumes:
+      - .:/app
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    command: cargo run --release
