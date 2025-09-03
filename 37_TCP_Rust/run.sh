@@ -19,3 +19,14 @@ ip link set up dev $TUN_IF
 # Run Rust binary
 echo "Running TCP_Rust..."
 cargo run --release
+pid=$!
+
+# Trap for cleanup when script exits
+cleanup() {
+    echo "Shutting down..."
+    ip link set down dev $TUN_IF || true
+    ip tuntap del dev $TUN_IF mode tun || true
+}
+
+# Wait for Rust process
+wait $pid

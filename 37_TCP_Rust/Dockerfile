@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     net-tools \
     libssl-dev \
     pkg-config \
+    tshark \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

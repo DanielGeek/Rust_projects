@@ -4,9 +4,19 @@
 
 ## 1️⃣ Create a new Rust project
 
+---------------------------------------------------------------------------------------------------------------------------------------------
+
 docker-compose up --build # Build the Docker image and start the container
 
 ## Inside the container
+
+docker exec -it tcp_rust_app bash # Open a shell inside the container
+
+ping -I tun0 192.168.0.2 # Test connectivity
+
+tshark -i tun0 # Capture packets on tun0
+
+---------------------------------------------------------------------------------------------------------------------------------------------
 
 cargo new --bin TCP_Rust  # Creates a new Rust project with src/main.rs
 
