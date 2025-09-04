@@ -12,11 +12,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy all project files including run.sh
+# Copy all project files including run_osx_version.sh
 COPY . .
 
-# Make run.sh executable
-RUN chmod +x run.sh
+# Make run_osx_version.sh executable
+RUN chmod +x run_osx_version.sh
 
 # Optional: script ready to run as entrypoint
-ENTRYPOINT ["./run.sh"]
+ENTRYPOINT ["./run_osx_version.sh"]

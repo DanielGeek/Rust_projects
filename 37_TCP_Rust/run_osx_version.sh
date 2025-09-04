@@ -28,5 +28,10 @@ cleanup() {
     ip tuntap del dev $TUN_IF mode tun || true
 }
 
+# Trap SIGTERM and run cleanup
+trap "kill $pid" INT TERM
+
 # Wait for Rust process
 wait $pid
+
+
