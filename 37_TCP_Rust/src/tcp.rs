@@ -1,8 +1,12 @@
-pub struct State {}
+pub enum State {
+    Closed,
+    Listen,
+}
 
 impl Default for State {
     fn default() -> Self {
-        State {}
+        // State::Closed
+        State::Listen
     }
 }
 

@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  tcp_rust:
+  tcp_rust_server:
     build: .
     container_name: tcp_rust_server
     working_dir: /app
