@@ -1,8 +1,6 @@
 # This is a TCP server and client implementation in Rust
 
-## Helpfull commands
-
-## 1️⃣ Create a new Rust project
+## Run the project
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -10,13 +8,21 @@ docker-compose up --build # Build the Docker image and start the container
 
 ## Inside the container
 
-docker exec -it tcp_rust_app bash # Open a shell inside the container
+docker exec -it tcp_rust_server bash # Open a shell inside the server container
+
+docker exec -it tcp_rust_client bash # Open a shell inside the client container
 
 ping -I tun0 192.168.0.2 # Test connectivity
+
+nc 192.168.0.2 80 # Try to connect to port 80
 
 tshark -i tun0 # Capture packets on tun0
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
+
+## Helpfull commands
+
+## 1️⃣ Create a new Rust project
 
 cargo new --bin TCP_Rust  # Creates a new Rust project with src/main.rs
 
@@ -56,7 +62,7 @@ docker ps  # Shows active containers
 
 ## 🔟 Check container logs
 
-docker logs tcp_rust_app  # View container output
+docker logs tcp_rust_server  # View container output
 
 ## 11️⃣ List all network interfaces and IPs on macOS
 

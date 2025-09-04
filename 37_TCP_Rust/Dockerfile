@@ -8,15 +8,17 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config \
     tshark \
+    netcat-traditional \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy all project files including run_osx_version.sh
+# Copy all project files including run_server.sh and run_client.sh
 COPY . .
 
-# Make run_osx_version.sh executable
-RUN chmod +x run_osx_version.sh
+# Make run_server.sh executable
+RUN chmod +x run_server.sh
 
 # Optional: script ready to run as entrypoint
-ENTRYPOINT ["./run_osx_version.sh"]
+ENTRYPOINT ["./run_server.sh"]
+CMD ["./run_client.sh"]

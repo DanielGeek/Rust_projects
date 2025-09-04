@@ -1,7 +1,15 @@
 extern crate tun_tap;
-use std::io;
+use std::{collections::HashMap, io};
+
+struct TcpState {}
+
+struct Quad {
+    src_ip: std::net::Ipv4Addr,
+    
+}
 
 fn main() -> io::Result<()> {
+    let mut connections: HashMap<Quad, TcpState> = HashMap::default();
     let nic = tun_tap::Iface::new("tun0", tun_tap::Mode::Tun)?;
     let mut buf = [0u8; 1504];
     loop {
@@ -9,7 +17,7 @@ fn main() -> io::Result<()> {
         let _eth_flags = u16::from_be_bytes([buf[0], buf[1]]);
         let eth_proto = u16::from_be_bytes([buf[2], buf[3]]);
         if eth_proto != 0x0800 {
-            // no ipv4
+            // not ipv4
             continue;
         }
 
@@ -18,13 +26,26 @@ fn main() -> io::Result<()> {
                 let src = p.source_addr();
                 let dst = p.destination_addr();
                 let proto = p.protocol();
-                eprintln!(
-                    "{} -> {} {}b of protocol {:x}",
-                    src,
-                    dst,
-                    p.payload_len(),
-                    proto
-                );
+                if proto != 0x06 {
+                    // not tcp
+                    continue;
+                }
+
+                match etherparse::TcpHeaderSlice::from_slice(&buf[4 + p.slice().len()..]) {
+                    Ok(p) => {
+                        // (srcip, srcport, dstip, dstport)
+                        eprintln!(
+                            "{} -> {} {}b of tcp to port {}",
+                            src,
+                            dst,
+                            p.slice().len(),
+                            p.destination_port()
+                        );
+                    }
+                    Err(e) => {
+                        eprintln!("Ignoring weird tcp packet: {:?}", e);
+                    }
+                }
             }
             Err(e) => {
                 eprintln!("Ignoring weird packet: {:?}", e);
