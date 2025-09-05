@@ -8,10 +8,69 @@ pub enum State {
     // Estab,
 }
 
-impl Default for State {
+pub struct Connection {
+    state: State,
+}
+
+/// State of the Send Sequence Space (RFC 793 S3.2 F4)
+///
+/// ```
+///      1         2          3          4
+///  ----------|----------|----------|----------
+///        SND.UNA    SND.NXT    SND.UNA
+///                             +SND.WND
+///
+/// 1 - old sequence numbers which have been acknowledged
+/// 2 - sequence numbers of unacknowledged data
+/// 3 - sequence numbers allowed for new data transmission
+/// 4 - future sequence numbers which are not yet allowed
+/// ```
+pub struct SendSequenceSpace {
+    /// send unacknowledged
+    una: usize,
+    /// send next
+    nxt: usize,
+    /// send window
+    wnd: usize,
+    /// send urgent pointer
+    up: bool,
+    /// segment sequence number used for last window update
+    wl1: usize,
+    /// segment acknowledgment number used for last window update
+    wl2: usize,
+    /// initial send sequence number
+    iss: usize,
+}
+
+/// State of Receive Sequence Space (RFC 793 S3.2 F5)
+///
+/// ```
+///                        1          2          3
+///                    ----------|----------|----------
+///                           RCV.NXT    RCV.NXT
+///                                     +RCV.WND
+///
+/// 1 - old sequence numbers which have been acknowledged
+/// 2 - sequence numbers allowed for new reception
+/// 3 - future sequence numbers which are not yet allowed
+/// ```
+struct RecvSequenceSpace {
+    /// receive next
+    nxt: usize,
+    /// receive window
+    wnd: usize,
+    /// receive urgent pointer
+    up: bool,
+    /// initial receive sequence number
+    irs: usize,
+}
+
+impl Default for Connection {
     fn default() -> Self {
         // State::Closed
-        State::Listen
+        Connection {
+            state: State::Listen,
+        }
     }
 }
 

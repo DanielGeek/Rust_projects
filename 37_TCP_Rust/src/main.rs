@@ -10,7 +10,7 @@ struct Quad {
 }
 
 fn main() -> io::Result<()> {
-    let mut connections: HashMap<Quad, tcp::State> = HashMap::default();
+    let mut connections: HashMap<Quad, tcp::Connection> = HashMap::default();
     let mut nic = tun_tap::Iface::new("tun0", tun_tap::Mode::Tun)?;
     let mut buf = [0u8; 1504];
     loop {

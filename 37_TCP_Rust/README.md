@@ -102,3 +102,9 @@ git status  # View modified/untracked files
 git add .  # Stage changes
 git commit -m "Your commit message"  # Commit changes
 git push origin main  # Push to remote
+
+## Docs
+
+## Read RFC 793
+
+[https://datatracker.ietf.org/doc/html/rfc793#page-15](https://datatracker.ietf.org/doc/html/rfc793#page-15)
