@@ -108,3 +108,7 @@ git push origin main  # Push to remote
 ## Read RFC 793
 
 [https://datatracker.ietf.org/doc/html/rfc793#page-15](https://datatracker.ietf.org/doc/html/rfc793#page-15)
+
+[https://docs.rs/etherparse/0.8.0/etherparse/](https://docs.rs/etherparse/0.8.0/etherparse/)
+
+[https://docs.rs/tun-tap/0.1.2/tun_tap/](https://docs.rs/tun-tap/0.1.2/tun_tap/)
