@@ -11,6 +11,10 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun
+    command: ./run_server.sh
+    networks:
+      mynet:
+        ipv4_address: 192.168.0.2
 
   tcp_rust_client:
     build: .
@@ -22,3 +26,14 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun
+    command: ./run_client.sh
+    networks:
+      mynet:
+        ipv4_address: 192.168.0.3
+
+networks:
+  mynet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24

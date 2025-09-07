@@ -8,15 +8,11 @@ docker-compose up --build # Build the Docker image and start the container
 
 ## Inside the container
 
-docker exec -it tcp_rust_server bash # Open a shell inside the server container
+docker exec -it tcp_rust_server tshark -i tun0 # Open a shell inside the server container and Capture packets on tun0
 
-docker exec -it tcp_rust_client bash # Open a shell inside the client container
+docker exec -it tcp_rust_client ping -I tun0 192.168.0.2 # Open a shell inside the client container
 
-ping -I tun0 192.168.0.2 # Test connectivity
-
-nc 192.168.0.2 80 # Try to connect to port 80
-
-tshark -i tun0 # Capture packets on tun0
+docker exec -it tcp_rust_client nc 192.168.0.2 443 # Test connectivity
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
