@@ -2,16 +2,16 @@ use std::io;
 use std::io::prelude::*;
 
 pub enum State {
-    Closed,
-    Listen,
+    // Listen,
     SynRcvd,
-    // Estab,
+    Estab,
 }
 
 pub struct Connection {
     state: State,
     send: SendSequenceSpace,
     recv: RecvSequenceSpace,
+    ip: etherparse::Ipv4Header,
 }
 
 /// State of the Send Sequence Space (RFC 793 S3.2 F4)
@@ -98,6 +98,23 @@ impl Connection {
                 wnd: tcph.window_size(),
                 up: false,
             },
+            ip: etherparse::Ipv4Header::new(
+                0,
+                64,
+                etherparse::IpTrafficClass::Tcp,
+                [
+                    iph.destination()[0],
+                    iph.destination()[1],
+                    iph.destination()[2],
+                    iph.destination()[3],
+                ],
+                [
+                    iph.source()[0],
+                    iph.source()[1],
+                    iph.source()[2],
+                    iph.source()[3],
+                ],
+            ),
         };
 
         // need to start establishing a connection
@@ -110,37 +127,19 @@ impl Connection {
         syn_ack.acknowledgment_number = c.recv.nxt;
         syn_ack.syn = true;
         syn_ack.ack = true;
-        let mut ip = etherparse::Ipv4Header::new(
-            syn_ack.header_len(),
-            64,
-            etherparse::IpTrafficClass::Tcp,
-            [
-                iph.destination()[0],
-                iph.destination()[1],
-                iph.destination()[2],
-                iph.destination()[3],
-            ],
-            [
-                iph.source()[0],
-                iph.source()[1],
-                iph.source()[2],
-                iph.source()[3],
-            ],
-        );
-        syn_ack.checksum = syn_ack
-            .calc_checksum_ipv4(&ip, &[])
-            .expect("failed to compute checksum");
-        eprintln!("got ip header:\n{:02x?}", iph);
-        eprintln!("got tcp header:\n{:02x?}", tcph);
+        let _ = c.ip.set_payload_len(syn_ack.header_len() as usize + 0);
+        // the kernel is nice and does this for us
+        // syn_ack.checksum = syn_ack
+        //     .calc_checksum_ipv4(&c.ip, &[])
+        //     .expect("failed to compute checksum");
 
         // write out the headers
         let unwritten = {
             let mut unwritten = &mut buf[..];
-            ip.write(&mut unwritten);
+            c.ip.write(&mut unwritten);
             syn_ack.write(&mut unwritten);
             unwritten.len()
         };
-        eprintln!("responding with {:02x?}", &buf[..buf.len() - unwritten]);
         nic.send(&buf[..unwritten])?;
         Ok(Some(c))
     }
@@ -152,6 +151,27 @@ impl Connection {
         tcph: etherparse::TcpHeaderSlice<'a>,
         data: &'a [u8],
     ) -> io::Result<()> {
+        // acceptable ack check
+        // SND.UNA < SEG.ACK =< SND.NXT
+        // but remember wrapping!
+        let ackn = tcph.acknowledgment_number();
+        if ackn < self.send.una {
+
+        }
+        if !(self.send.una < tcph.acknowledgment_number()
+            && tcph.acknowledgment_number() <= self.send.nxt)
+        {
+            return Ok(());
+        }
+
+        match self.state {
+            State::SynRcvd => {
+                // expect to get an ACK for our SYN
+            }
+            State::Estab => {
+                unimplemented!()
+            }
+        }
         Ok(())
     }
 }
