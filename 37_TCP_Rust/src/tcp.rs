@@ -151,15 +151,33 @@ impl Connection {
         tcph: etherparse::TcpHeaderSlice<'a>,
         data: &'a [u8],
     ) -> io::Result<()> {
+        // first, check that sequence numbers are valid (RFC 793 S3.3)
+        //
         // acceptable ack check
         // SND.UNA < SEG.ACK =< SND.NXT
         // but remember wrapping!
+        //
         let ackn = tcph.acknowledgment_number();
-        if ackn < self.send.una {
-
+        if !is_between_wrapped(self.send.una, ackn, self.send.nxt.wrapping_add(1)) {
+            return Ok(());
         }
-        if !(self.send.una < tcph.acknowledgment_number()
-            && tcph.acknowledgment_number() <= self.send.nxt)
+        //
+        // valid segment check. okay if it acks at leaste one byte, which means that at least one of
+        // the fallowing is true:
+        //
+        // RCV.NXT <= SEG.SEQ < RCV.NXT+RCV.WND
+        // RECV.NXT =< SEG.SEQ+SEG.LEN-1 < RCV.NXT+RCV.WND
+        let seqn = tcph.sequence_number();
+        if data.len() == 0 && !tcph.syn() && !tcph.fin() {
+            // zero-length segment has separate rules for acceptance
+        }
+        let wend = self.recv.nxt.wrapping_add(self.recv.wnd as u32);
+        if !is_between_wrapped(self.recv.nxt.wrapping_sub(1), seqn, wend)
+            && !is_between_wrapped(
+                self.recv.nxt.wrapping_sub(1),
+                seqn + data.len() as u32 - 1,
+                wend,
+            )
         {
             return Ok(());
         }
@@ -174,4 +192,59 @@ impl Connection {
         }
         Ok(())
     }
+}
+
+fn is_between_wrapped(start: u32, x: u32, end: u32) -> bool {
+    use std::cmp::Ordering;
+    match start.cmp(x) {
+        Ordering::Equal => return false,
+        Ordering::Less => {
+            // we have:
+            //
+            //  0   |---------S-------X-------------------------| (wraparound)
+            //
+            // X is between S and E (S < X < E) in these cases:
+            //
+            //  0   |---------S-------X---E---------------------| (wraparound)
+            //      |-----E-S---------X-------------------------| (wraparound)
+            //
+            // but *not* in these cases:
+            //
+            //  0   |---------S-E--X----------------------------| (wraparound)
+            //  0   |-------------X-----------------------------| (wraparound)
+            //              ~-S+E
+            //
+            //  0   |---------S-----|----------X----------------| (wraparound)
+            //                  X+E-~
+            // or, in other words, iff !(s <= E <= X)
+            if end >= start && end <= x {
+                return false;
+            }
+        }
+        Ordering::Greater => {
+            // we have the opposite of above:
+            //
+            //  0   |---------X-------S-------------------------| (wraparound)
+            //
+            // X is between S and E (S < X < E) *only* in this case:
+            //
+            // but *not* in these cases
+            //
+            //  0   |---------X-----S----E----------------------| (wraparound)
+            //
+            //      |--------E-X-----S--------------------------| (wraparound)
+            //
+            //  0   |----------|-----S--------------------------| (wraparound)
+            //                 ~-X+E
+            //
+            //  0   |----------X-----|--------------------------| (wraparound)
+            //                   X+E-~
+            // or, in other words, iff !(s <= E <= X)
+            if end < start && end > x {
+            } else {
+                return false;
+            }
+        }
+    }
+    true
 }
