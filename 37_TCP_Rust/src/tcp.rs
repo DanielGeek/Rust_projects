@@ -168,18 +168,31 @@ impl Connection {
         // RCV.NXT <= SEG.SEQ < RCV.NXT+RCV.WND
         // RECV.NXT =< SEG.SEQ+SEG.LEN-1 < RCV.NXT+RCV.WND
         let seqn = tcph.sequence_number();
-        if data.len() == 0 && !tcph.syn() && !tcph.fin() {
-            // zero-length segment has separate rules for acceptance
+        let mut slen = data.len() as u32;
+        if tcph.fin() {
+            slen += 1;
+        }
+        if tcph.syn() {
+            slen += 1;
         }
         let wend = self.recv.nxt.wrapping_add(self.recv.wnd as u32);
-        if !is_between_wrapped(self.recv.nxt.wrapping_sub(1), seqn, wend)
-            && !is_between_wrapped(
-                self.recv.nxt.wrapping_sub(1),
-                seqn + data.len() as u32 - 1,
-                wend,
-            )
-        {
-            return Ok(());
+        if slen == 0 {
+            // zero-length segment has separate rules for acceptance
+            if self.recv.wnd == 0 {
+                if seqn != self.recv.nxt {
+                    return Ok(());
+                } else if !is_between_wrapped(self.recv.nxt.wrapping_sub(1), seqn, wend) {
+                    return Ok(());
+                }
+            }
+        } else {
+            if self.recv.wnd == 0 {
+                return Ok(());
+            } else if !is_between_wrapped(self.recv.nxt.wrapping_sub(1), seqn, wend)
+                && !is_between_wrapped(self.recv.nxt.wrapping_sub(1), seqn + slen - 1, wend)
+            {
+                return Ok(());
+            }
         }
 
         match self.state {
