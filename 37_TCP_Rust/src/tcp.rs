@@ -94,7 +94,7 @@ impl Connection {
         }
 
         let iss = 0;
-        let wnd = 10;
+        let wnd = 1024;
         let mut c = Connection {
             state: State::SynRcvd,
             send: SendSequenceSpace {
@@ -148,12 +148,14 @@ impl Connection {
             buf.len(),
             self.tcp.header_len() as usize + self.ip.header_len() as usize + payload.len(),
         );
-        self.ip.set_payload_len(size);
+        self.ip
+            .set_payload_len(size - self.ip.header_len() as usize);
 
         // the kernel is nice and does this for us
-        // self.tcp.checksum = self.tcp
-        //     .calc_checksum_ipv4(&self.ip, &[])
-        //     .expect("failed to compute checksum");
+        self.tcp.checksum = self
+            .tcp
+            .calc_checksum_ipv4(&self.ip, &[])
+            .expect("failed to compute checksum");
 
         // write out the headers
         use std::io::Write;
@@ -191,6 +193,7 @@ impl Connection {
         tcph: etherparse::TcpHeaderSlice<'a>,
         data: &'a [u8],
     ) -> io::Result<()> {
+        eprintln!("got pkt");
         // first, check that sequence numbers are valid (RFC 793 S3.3)
         let seqn = tcph.sequence_number();
         let mut slen = data.len() as u32;
@@ -201,18 +204,18 @@ impl Connection {
             slen += 1;
         }
         let wend = self.recv.nxt.wrapping_add(self.recv.wnd as u32);
-        if slen == 0 {
+        let okay = if slen == 0 {
             // zero-length segment has separate rules for acceptance
             if self.recv.wnd == 0 {
-                if seqn != self.recv.nxt {
-                    return Ok(());
-                } else if !is_between_wrapped(self.recv.nxt.wrapping_sub(1), seqn, wend) {
-                    return Ok(());
-                }
+                if seqn != self.recv.nxt { false } else { true }
+            } else if !is_between_wrapped(self.recv.nxt.wrapping_sub(1), seqn, wend) {
+                false
+            } else {
+                true
             }
         } else {
             if self.recv.wnd == 0 {
-                return Ok(());
+                false
             } else if !is_between_wrapped(self.recv.nxt.wrapping_sub(1), seqn, wend)
                 && !is_between_wrapped(
                     self.recv.nxt.wrapping_sub(1),
@@ -220,22 +223,27 @@ impl Connection {
                     wend,
                 )
             {
-                return Ok(());
+                false
+            } else {
+                true
             }
+        };
+
+        if !okay {
+            self.write(nic, &[])?;
+            return Ok(());
         }
         self.recv.nxt = seqn.wrapping_add(slen);
-        // TODO: if _not_ acceptable, send ACK
-        // <SEQ=SND.NXT><ACK=RCV.NXT><CTL=ACK>
 
         if !tcph.ack() {
             return Ok(());
         }
 
-        let ack = tcph.acknowledgment_number();
+        let ackn = tcph.acknowledgment_number();
         if let State::SynRcvd = self.state {
-            if !is_between_wrapped(
+            if is_between_wrapped(
                 self.send.una.wrapping_add(1),
-                ack,
+                ackn,
                 self.send.nxt.wrapping_add(1),
             ) {
                 // must have ACKed our SYN, since we detected at least one acked byte,
@@ -247,12 +255,16 @@ impl Connection {
         }
 
         if let State::Estab = self.state {
-            if !is_between_wrapped(self.send.una, ack, self.send.nxt.wrapping_add(1)) {
+            if !is_between_wrapped(self.send.una, ackn, self.send.nxt.wrapping_add(1)) {
                 return Ok(());
             }
-            self.send.una = ack;
+            self.send.una = ackn;
             // TODO:
             assert!(data.is_empty());
+
+            eprintln!("we're established and got stuff");
+            dbg!(tcph.fin());
+            dbg!(self.tcp.fin);
 
             // now let's terminate the connection!
             // TODO: needs to be stored in the retransmission queue!
@@ -264,6 +276,7 @@ impl Connection {
         if let State::FinWait1 = self.state {
             if self.send.una == self.send.iss + 2 {
                 // our FIN has been ACKed!
+                eprintln!("THEY'VE ACKED OUR FIN!");
                 self.state = State::FinWait2;
             }
         }
@@ -272,6 +285,7 @@ impl Connection {
             match self.state {
                 State::FinWait2 => {
                     // we're done with the connection
+                    eprintln!("THEY'VE FINED!");
                     self.write(nic, &[])?;
                     self.state = State::TimeWait;
                 }
