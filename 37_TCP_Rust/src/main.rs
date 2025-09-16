@@ -31,6 +31,7 @@ fn main() -> io::Result<()> {
                 let src = iph.source_addr();
                 let dst = iph.destination_addr();
                 if iph.protocol() != 0x06 {
+                    eprintln!("BAD PROTOCOL");
                     // not tcp
                     continue;
                 }
@@ -64,8 +65,8 @@ fn main() -> io::Result<()> {
                     }
                 }
             }
-            Err(_e) => {
-                // eprintln!("Ignoring weird packet: {:?}", e);
+            Err(e) => {
+                eprintln!("Ignoring weird packet: {:?}", e);
             }
         }
     }
