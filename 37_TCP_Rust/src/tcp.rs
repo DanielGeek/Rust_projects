@@ -1,5 +1,4 @@
 use std::io;
-use std::io::prelude::*;
 
 pub enum State {
     // Listen,
@@ -11,6 +10,7 @@ pub enum State {
 }
 
 impl State {
+    #[allow(dead_code)]
     fn is_synchronized(&self) -> bool {
         match *self {
             State::SynRcvd => false,
@@ -46,13 +46,13 @@ pub struct SendSequenceSpace {
     /// send next
     nxt: u32,
     /// send window
-    wnd: u16,
+    _wnd: u16,
     /// send urgent pointer
-    up: bool,
+    _up: bool,
     /// segment sequence number used for last window update
-    wl1: usize,
+    _wl1: usize,
     /// segment acknowledgment number used for last window update
-    wl2: usize,
+    _wl2: usize,
     /// initial send sequence number
     iss: u32,
 }
@@ -75,9 +75,9 @@ struct RecvSequenceSpace {
     /// receive window
     wnd: u16,
     /// receive urgent pointer
-    up: bool,
+    _up: bool,
     /// initial receive sequence number
-    irs: u32,
+    _irs: u32,
 }
 
 impl Connection {
@@ -85,9 +85,9 @@ impl Connection {
         nic: &mut tun_tap::Iface,
         iph: etherparse::Ipv4HeaderSlice<'a>,
         tcph: etherparse::TcpHeaderSlice<'a>,
-        data: &'a [u8],
+        _data: &'a [u8],
     ) -> io::Result<Option<Self>> {
-        let mut buf = [0u8; 1500];
+        let mut _buf = [0u8; 1500];
         if !tcph.syn() {
             // only expected SYN packet
             return Ok(None);
@@ -101,16 +101,16 @@ impl Connection {
                 iss,
                 una: iss,
                 nxt: iss,
-                wnd: wnd,
-                up: false,
-                wl1: 0,
-                wl2: 0,
+                _wnd: wnd,
+                _up: false,
+                _wl1: 0,
+                _wl2: 0,
             },
             recv: RecvSequenceSpace {
-                irs: tcph.sequence_number(),
+                _irs: tcph.sequence_number(),
                 nxt: tcph.sequence_number() + 1,
                 wnd: tcph.window_size(),
-                up: false,
+                _up: false,
             },
             tcp: etherparse::TcpHeader::new(tcph.destination_port(), tcph.source_port(), iss, wnd),
             ip: etherparse::Ipv4Header::new(
@@ -148,7 +148,8 @@ impl Connection {
             buf.len(),
             self.tcp.header_len() as usize + self.ip.header_len() as usize + payload.len(),
         );
-        self.ip
+        let _ = self
+            .ip
             .set_payload_len(size - self.ip.header_len() as usize);
 
         // the kernel is nice and does this for us
@@ -160,10 +161,11 @@ impl Connection {
         // write out the headers
         use std::io::Write;
         let mut unwritten = &mut buf[..];
-        self.ip.write(&mut unwritten);
-        self.tcp.write(&mut unwritten);
+        let _ = self.ip.write(&mut unwritten);
+        let _ = self.tcp.write(&mut unwritten);
         let payload_bytes = unwritten.write(payload)?;
         let unwritten = unwritten.len();
+        #[allow(unused_must_use)]
         self.send.nxt.wrapping_add(payload_bytes as u32);
         if self.tcp.syn {
             self.send.nxt = self.send.nxt.wrapping_add(1);
@@ -177,6 +179,7 @@ impl Connection {
         Ok(payload_bytes)
     }
 
+    #[allow(dead_code)]
     fn send_rst(&mut self, nic: &mut tun_tap::Iface) -> io::Result<()> {
         self.tcp.rst = true;
         // TODO: fix sequence numbers here
@@ -189,7 +192,7 @@ impl Connection {
     pub fn on_packet<'a>(
         &mut self,
         nic: &mut tun_tap::Iface,
-        iph: etherparse::Ipv4HeaderSlice<'a>,
+        _iph: etherparse::Ipv4HeaderSlice<'a>,
         tcph: etherparse::TcpHeaderSlice<'a>,
         data: &'a [u8],
     ) -> io::Result<()> {
@@ -238,6 +241,7 @@ impl Connection {
         if !tcph.ack() {
             return Ok(());
         }
+        eprintln!("1");
 
         let ackn = tcph.acknowledgment_number();
         if let State::SynRcvd = self.state {
@@ -254,7 +258,8 @@ impl Connection {
             }
         }
 
-        if let State::Estab = self.state {
+        if let State::Estab | State::FinWait1 | State::FinWait2 = self.state {
+            eprintln!("IS ESTABLISHED");
             if !is_between_wrapped(self.send.una, ackn, self.send.nxt.wrapping_add(1)) {
                 return Ok(());
             }
@@ -262,17 +267,20 @@ impl Connection {
             // TODO:
             assert!(data.is_empty());
 
-            eprintln!("we're established and got stuff");
-            dbg!(tcph.fin());
-            dbg!(self.tcp.fin);
+            if let State::Estab = self.state {
+                eprintln!("we're established and got stuff");
+                dbg!(tcph.fin());
+                dbg!(self.tcp.fin);
 
-            // now let's terminate the connection!
-            // TODO: needs to be stored in the retransmission queue!
-            self.tcp.fin = true;
-            self.write(nic, &[])?;
-            self.state = State::FinWait1;
+                // now let's terminate the connection!
+                // TODO: needs to be stored in the retransmission queue!
+                self.tcp.fin = true;
+                self.write(nic, &[])?;
+                self.state = State::FinWait1;
+            }
         }
 
+        eprintln!("1");
         if let State::FinWait1 = self.state {
             if self.send.una == self.send.iss + 2 {
                 // our FIN has been ACKed!
@@ -281,6 +289,7 @@ impl Connection {
             }
         }
 
+        eprintln!("1");
         if !tcph.fin() {
             match self.state {
                 State::FinWait2 => {
