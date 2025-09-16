@@ -1,4 +1,4 @@
-# This is a TCP server and client implementation in Rust
+# This is a TCP server and client implementation in Rust using the crate tun_tap
 
 ## Run the project
 
