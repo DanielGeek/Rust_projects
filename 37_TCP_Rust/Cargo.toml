@@ -7,3 +7,8 @@ edition = "2024"
 tun-tap = "0.1.2"
 etherparse = "0.8.0"
 
+[lib]
+name = "TCP_Rust"
+
+[[bin]]
+name = "TCP_Rust"
