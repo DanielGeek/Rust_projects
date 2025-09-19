@@ -36,6 +36,9 @@ Each project folder is numbered for organization and represents a focused effort
 | 32  | AI-Multi-Agent            | Multi-agent architecture powered by LLMs with chat modules and agent models. |
 | 33  | rust-crash-course         | **Comprehensive Rust Crash Course with exercises, solutions, and resources.** |
 | 34  | tauri-llm-playground      | **Build your own LLM Playground with (Tauri2.0 + Rust) 🚀.** |
+| 35  | tauri-ios-dev             | iOS Development with Tauri 2.0 using Rust. |
+| 36  | tauri-android-dev         | Android Development with Tauri 2.0 using Rust. |
+| 37  | tcp-rust-tun-tap          | TCP server and client implementation in Rust using tun_tap and Docker networking. |
 
 ---
 
