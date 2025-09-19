@@ -1,4 +1,4 @@
-use std::{collections::HashMap, io, io::prelude::*, net::Ipv4Addr, sync::mpsc, thread};
+use std::{collections::HashMap, io::{self, prelude::*}, net::Ipv4Addr, sync::{Arc, mpsc}, thread};
 
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq)]
 struct Quad {
@@ -6,7 +6,7 @@ struct Quad {
     dst: (Ipv4Addr, u16),
 }
 
-type InterfaceHandle = mpsc::Sender<InterfaceRequest>;
+type InterfaceHandle = Arc<Mutex<ConnectionManager>>;
 
 enum InterfaceRequest {
     Write {
@@ -36,14 +36,13 @@ enum InterfaceRequest {
 }
 
 pub struct Interface {
-    tx: InterfaceHandle,
+    ih: InterfaceHandle,
     jh: thread::JoinHandle<()>,
 }
 
+#[derive(Default)]
 pub struct ConnectionManager {
     connections: HashMap<Quad, tcp::Connection>,
-    nic: tun_tap::Iface,
-    buf: [u8; 1504],
 }
 
 impl ConnectionManager {
@@ -55,17 +54,27 @@ impl ConnectionManager {
 
 impl Interface {
     pub fn new() -> io::Result<Self> {
-        let cm = ConnectionManager {
-            connections: Default::default(),
-            nic: tun_tap::Iface::without_packet_info("tun0", tun_tap::Mode::Tun)?,
-            buf: [0u8; 1504],
+        let nic: tun_tap::Iface::without_packet_info("tun0", tun_tap::Mode::Tun)?;
+
+        let cm: InterfaceHandle = Arc::default();
+
+        let jh = {
+            let cm = cm.clone();
+            thread::spawn(move || {
+                let nic = nic;
+                let cm = cm;
+                let buf = [0u8; 1504];
+
+                // do the stuff that main does
+            })
         };
-        let (tx, rx) = mpsc::channel();
-        let jh = thread::spawn(move || cm.run_on(rx));
-        Ok(Interface { tx, jh })
+
+        Ok(Interface { cm, jh })
     }
 
     pub fn bind(&mut self, port: u16) -> io::Result<TcpListener> {
+        let cm = self.ih.lock().unwrap();
+        // TODO: something that start accepting SYN packets on `port`
         let (ack, rx) = mpsc::channel();
         self.tx.send(InterfaceRequest::Bind { port, ack });
         rx.recv().unwrap();
@@ -78,10 +87,7 @@ pub struct TcpListener(u16, InterfaceHandle);
 impl TcpListener {
     pub fn accept(&mut self) -> io::Result<TcpStream> {
         let (ack, rx) = mpsc::channel();
-        self.1.send(InterfaceRequest::Accept {
-            port: self.0,
-            ack,
-        });
+        self.1.send(InterfaceRequest::Accept { port: self.0, ack });
         let quad = rx.recv().unwrap();
         Ok(TcpStream(quad, self.1.clone()))
     }
@@ -93,7 +99,7 @@ impl Read for TcpStream {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         let (read, rx) = mpsc::channel();
         self.1.send(InterfaceRequest::Read {
-            quad: self.0,
+            quad: self.quad,
             max_length: buf.len(),
             read,
         });
@@ -119,7 +125,10 @@ impl Write for TcpStream {
 
     fn flush(&mut self) -> io::Result<()> {
         let (ack, rx) = mpsc::channel();
-        self.1.send(InterfaceRequest::Flush { quad: self.0, ack });
+        self.1.send(InterfaceRequest::Flush {
+            quad: self.quad,
+            ack,
+        });
         rx.recv().unwrap();
         Ok(())
     }
