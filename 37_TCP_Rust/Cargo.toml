@@ -6,6 +6,8 @@ edition = "2024"
 [dependencies]
 tun-tap = "0.1.2"
 etherparse = "0.8.0"
+bitflags = "1.0"
+nix = "0.13"
 
 [lib]
 name = "TCP_Rust"
