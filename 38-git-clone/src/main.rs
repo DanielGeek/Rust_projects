@@ -16,7 +16,10 @@ fn main() {
     } else if args[1] == "cat-file" {
         if args[2] == "-p" {
             let hash = args[3].as_str();
-            dbg!(hash);
+            // the first two characters of the hash are the folder name, and the rest are the file name
+            let folder_name = &hash[0..2];
+            let file_name = &hash[2..];
+            dbg!(folder_name, file_name);
         }
     } else {
         println!("unknown command: {}", args[1]);
