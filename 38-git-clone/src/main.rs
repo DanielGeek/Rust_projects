@@ -13,7 +13,12 @@ fn main() {
         fs::create_dir(".git/refs").unwrap();
         fs::write(".git/HEAD", "ref: refs/heads/main\n").unwrap();
         println!("Initialized git directory")
+    } else if args[1] == "cat-file" {
+        if args[2] == "-p" {
+            let hash = args[3].as_str();
+            dbg!(hash);
+        }
     } else {
-        println!("unknown command: {}", args[1])
+        println!("unknown command: {}", args[1]);
     }
 }
