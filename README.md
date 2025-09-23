@@ -39,6 +39,7 @@ Each project folder is numbered for organization and represents a focused effort
 | 35  | tauri-ios-dev             | iOS Development with Tauri 2.0 using Rust. |
 | 36  | tauri-android-dev         | Android Development with Tauri 2.0 using Rust. |
 | 37  | tcp-rust-tun-tap          | TCP server and client implementation in Rust using tun_tap and Docker networking. |
+| 38  | rust-git-clone            | A Git clone built in Rust — implementing `.git`, commits, trees & transfer protocols. |
 
 ---
 
