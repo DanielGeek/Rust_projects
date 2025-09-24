@@ -1,10 +1,14 @@
-use std::fs;
 use flate2::read::ZlibDecoder;
+use std::fs;
 use std::io::Read;
 
-pub fn cat_file(args: &[String]) {}
-    
-pub fn pretty_print(hash: String) {
+pub fn cat_file(args: &[String]) {
+    if args[0].as_str() == "-p" {
+        pretty_print(args[1].as_str());
+    }
+}
+
+pub fn pretty_print(hash: &str) {
     // the first two characters of the hash are the folder name, and the rest are the file name
     let folder_name = &hash[0..2];
     let file_name = &hash[2..];
