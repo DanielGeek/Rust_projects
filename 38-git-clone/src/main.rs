@@ -1,13 +1,10 @@
 use codecrafters_git::{
-    cat_file::{cat_file, pretty_print},
+    cat_file::cat_file,
     init::init,
 };
 use std::env;
 
 fn main() {
-    // You can use print statements as follows for debugging, they'll be visible when running tests.
-    eprintln!("Logs from your program will appear here!");
-
     // Uncomment this block to pass the first stage
     let args: Vec<String> = env::args().collect();
     match args[1].as_str() {

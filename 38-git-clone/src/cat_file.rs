@@ -1,6 +1,5 @@
 use flate2::read::ZlibDecoder;
-use std::fs;
-use std::io::Read;
+use std::{fs, io::{self, Read, Write}};
 
 pub fn cat_file(args: &[String]) {
     if args[0].as_str() == "-p" {
@@ -22,6 +21,9 @@ pub fn pretty_print(hash: &str) {
     let mut decoder = ZlibDecoder::new(content.as_slice());
 
     decoder.read_to_string(&mut extracted_content).unwrap();
+    let split = extracted_content.split("\x00");
+    let extracted_content = split.last().unwrap();
 
     print!("{extracted_content}");
+    io::stdout().flush().unwrap();
 }
