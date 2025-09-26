@@ -6,7 +6,12 @@ edition = "2021"
 rust-version = "1.80"
 
 [dependencies]
-anyhow = "1.0.68"                                # error handling
-bytes = "1.3.0"                                  # helps manage buffers
-flate2 = "1.0.34"                                # compression
-thiserror = "1.0.38"                             # error handling
+reqwest = { version = "0.11.13", features = ["json", "blocking"] }  # HTTP requests
+bytes = "1.3.0"                                                     # helps manage buffers
+tokio = { version = "1.23.0", features = ["full"] }                 # async runtime
+clap = { version = "4.0.32", features = ["derive"] }                # command-line argument parsing
+flate2 = "1.0.34"                                                   # compression
+sha1 = "0.10.1"                                                     # SHA-1 hash function
+hex = "0.4.3"                                                       # hex encoding
+anyhow = "1.0.68"                                                   # error handling
+thiserror = "1.0.38"                                                # error handling
