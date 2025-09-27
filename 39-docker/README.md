@@ -30,12 +30,15 @@ Getting set up with Docker
 - Connect to docker hub
 - Push to docker hub
 - Compose file
+- Postgres in docker
 
 ### Prodding with docker
 
 - Docker in Github actions
 - Profiles in docker compose
-- RUnning your app on a vps in docker
+- Running your app on a vps in docker
+- Nginx in a container
+- Deploy script
 
 ### Challenges
 
