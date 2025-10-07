@@ -6,11 +6,12 @@
 
 Getting set up with Docker
 
-- [x] Install Docker on your computer
+- [x] [Install Docker](/39-docker/installing_docker.md)
+- [x] [Running your first container](/39-docker/running_your_first_container.md)
+- [ ] [List docker images]()
 - [ ] Pull a docker image
 - [ ] Run a container
 - [ ] Set up Windsurf to work with Docker
-- [ ] List docker images
 - [ ] List docker containers
 - [ ] Stop a container
 - [ ] Delete a container
