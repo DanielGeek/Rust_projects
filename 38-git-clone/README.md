@@ -58,3 +58,31 @@ alias mygit=/path/to/your/repo/your_program.sh
 mkdir -p /tmp/testing && cd /tmp/testing
 mygit init
 ```
+
+## Commands
+
+### hash-object
+
+```sh
+cargo run hash-object -w test
+```
+
+This will create a blob object in the `.git/objects` directory.
+
+The output will be the SHA-1 hash of the file.
+
+```sh
+83bd3630bb4c88996874d2a2ae693cc615d7fcd5
+```
+
+This is the SHA-1 hash of the file.
+
+```sh
+ls .git/objects/83
+```
+
+This will show the blob object in the `.git/objects` directory.
+
+```sh
+83bd3630bb4c88996874d2a2ae693cc615d7fcd5
+```

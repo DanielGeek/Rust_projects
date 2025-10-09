@@ -1,5 +1,6 @@
-use std::{io::Write, fs::DirBuilder};
+use std::{fs::DirBuilder, io::Write};
 
+use flate2::{Compression, write::ZlibEncoder};
 use hex::ToHex;
 use sha1::{Digest, Sha1};
 
@@ -24,12 +25,16 @@ fn get_sha(file: &[u8]) -> String {
     hasher.finalize().encode_hex::<String>()
 }
 
-fn compress(file: &[u8]) {}
+fn compress(file: &[u8]) {
+    let mut encoder = ZlibEncoder::new(Vec::new(), Compression::default());
+    encoder.write_all(file).unwrap();
+}
 
 fn create_folder(sha: &str) {
     // normally we should find git folder in case we are nested in. Let's yolo because why not? :)
     let path = format!(".git/objects/{}", &sha[0..2]);
-    DirBuilder::new().create(path).unwrap();
+    // we need to handle the case that the folder already exists. If that is so, we don't want to crash.
+    DirBuilder::new().recursive(true).create(path).unwrap();
 }
 
 fn print_sha(sha: &str) {
