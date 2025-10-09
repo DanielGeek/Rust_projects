@@ -1,4 +1,7 @@
-use sha1::Sha1;
+use std::{io::Write, fs::DirBuilder};
+
+use hex::ToHex;
+use sha1::{Digest, Sha1};
 
 pub fn hash_object(args: &[String]) {
     match args[0].as_str() {
@@ -6,6 +9,10 @@ pub fn hash_object(args: &[String]) {
             let filename = &args[1];
             let file = std::fs::read(filename).unwrap();
             let sha = get_sha(&file);
+
+            create_folder(&sha);
+            compress(&file);
+            print_sha(&sha);
         }
         _ => println!("unknown option: {}", args[0]),
     }
@@ -14,5 +21,17 @@ pub fn hash_object(args: &[String]) {
 fn get_sha(file: &[u8]) -> String {
     let mut hasher = Sha1::new();
     hasher.update(file);
-    let hash = hasher.finalize();
+    hasher.finalize().encode_hex::<String>()
+}
+
+fn compress(file: &[u8]) {}
+
+fn create_folder(sha: &str) {
+    // normally we should find git folder in case we are nested in. Let's yolo because why not? :)
+    let path = format!(".git/objects/{}", &sha[0..2]);
+    DirBuilder::new().create(path).unwrap();
+}
+
+fn print_sha(sha: &str) {
+    println!("{sha}");
 }
