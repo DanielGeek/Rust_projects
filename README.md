@@ -40,6 +40,8 @@ Each project folder is numbered for organization and represents a focused effort
 | 36  | tauri-android-dev         | Android Development with Tauri 2.0 using Rust. |
 | 37  | tcp-rust-tun-tap          | TCP server and client implementation in Rust using tun_tap and Docker networking. |
 | 38  | rust-git-clone            | A Git clone built in Rust — implementing `.git`, commits, trees & transfer protocols. |
+| 39  | docker-course             | Docker course — containers, images, volumes, networks & Docker Compose. |
+| 40  | to-do                     | Full-Stack To-Do List App with Rust backend (Actix-web) and Next.js frontend. |
 
 ---
 
