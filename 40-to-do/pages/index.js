@@ -6,24 +6,23 @@ import { format } from "date-fns";
 import CheckBox from "../Components/CheckBox";
 
 const index = () => {
-  const [editText, setEditText] = useState();
   const [todos, setTodos] = useState([]);
   const [todosCopy, setTodosCopy] = useState(todos);
   const [todoInput, setTodoInput] = useState("");
   const [editIndex, setEditIndex] = useState(-1);
   const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
 
   // State Management
   const [count, setCount] = useState(0);
   const [search, setSearch] = useState("");
-  const [searchItem, setSearchItem] = useState([]);
+  const [searchItem, setSearchItem] = useState("");
 
   useEffect(() => {
     fetchTodos();
   }, [count]);
 
   const editTodo = (index) => {
+    console.log({ index });
     setTodoInput(todos[index].title);
     setEditIndex(index);
   };
@@ -55,9 +54,7 @@ const index = () => {
       } else {
         // Update existing todo
         const todoToUpdate = { ...todos[editIndex], title: todoInput };
-        const response = await axios.put(`http://localhost:8080/todos/${todoToUpdate.id}`, {
-          todoToUpdate
-        });
+        const response = await axios.put(`http://localhost:8080/todos/${todoToUpdate.id}`, todoToUpdate);
         console.log(response);
         const updatedTodos = [...todos];
         updatedTodos[editIndex] = response.data;
@@ -86,9 +83,7 @@ const index = () => {
         ...todos[index],
         completed: !todos[index].completed,
       }
-      const response = await axios.put(`http://localhost:8080/todos/${todoToUpdate.id}`, {
-        todoToUpdate
-      });
+      const response = await axios.put(`http://localhost:8080/todos/${todoToUpdate.id}`, todoToUpdate);
       const updatedTodos = [...todos];
       updatedTodos[index] = response.data;
       setTodos(updatedTodos);
@@ -96,11 +91,6 @@ const index = () => {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  const searchTodo = () => {
-    const results = todos.filter((todo) => todo.title.toLowerCase().includes(searchInput.toLowerCase()));
-    setSearchResults(results);
   }
 
   const formatDate = (dateString) => {
@@ -115,6 +105,11 @@ const index = () => {
   const renderTodos = (todosToRender) => {
     return todosToRender.map((todo, index) => (
       <li key={index} className="li">
+        <CheckBox
+          toggleCompleted={toggleCompleted}
+          index={index}
+          todo={todo}
+        />
         <label htmlFor="" className="form-check-label"></label>
         <span className="todo-text">{`${todo.title} ${formatDate(todo.created_at)}`}</span>
         <span
@@ -139,7 +134,19 @@ const index = () => {
 
   // Filter
   const onHandleSearch = (value) => {
-    const filteredToDo = todos.filter(({ title }) => title.toLowerCase().includes(value?.toLowerCase()));
+    const searchValue = typeof value === 'string' ? value : String(value || '');
+
+    setSearchInput(searchValue);
+
+    if (!searchValue) {
+      setTodos(todosCopy);
+      return;
+    }
+
+    const filteredToDo = todos.filter(({ title }) =>
+      title.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
     if (filteredToDo.length === 0) {
       setTodos(todosCopy);
     } else {
@@ -160,7 +167,7 @@ const index = () => {
 
   useEffect(() => {
     if (search) {
-      onHandleSearch();
+      onHandleSearch(search);
     } else {
       onClearSearch();
     }
