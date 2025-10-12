@@ -8,8 +8,8 @@ Getting set up with Docker
 
 - [x] [Install Docker](/39-docker/installing_docker.md)
 - [x] [Running your first container](/39-docker/running_your_first_container.md)
-- [ ] [List docker images]()
-- [ ] Pull a docker image
+- [x] [List docker images](/39-docker/list_docker_images.md)
+- [x] [Pull a docker image](/39-docker/pull_docker_image.md)
 - [ ] Run a container
 - [ ] Set up Windsurf to work with Docker
 - [ ] List docker containers
