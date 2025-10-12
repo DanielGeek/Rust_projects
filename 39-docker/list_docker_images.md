@@ -13,3 +13,5 @@ Let's go through the table that Docker displays for us.
 ## REPOSITORY
 
 Docker stores it's images in repositories similar to how Github stores code projects in repositories. Each image get's it's own repo, which makes it easy to know which image we're creating a container from. When we ran the command `docker run -it ubuntu` the `ubuntu` was the name of the repository.
+
+Something to note, single name repositories like `ubuntu` are __official__ repositories. As in they are created by Docker or an official organization. For example the `ubuntu` repo is managed by the Ubuntu team at Canonical. If you see a double name repository like `ubuntu:24.04` then the `24.04` is a tag, which is a version of the image.
