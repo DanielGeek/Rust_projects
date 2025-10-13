@@ -47,7 +47,10 @@ fn print_sha(sha: &str) {
     println!("{sha}");
 }
 
-fn save_file(file: &[u8], folder_path: &str, file_sha: &str) {}
+fn save_file(file: &[u8], folder_path: &str, file_sha: &str) {
+    let path = format!("{folder_path}/{file_sha}");
+    std::fs::write(path, file).unwrap();
+}
 
 fn get_file_sha(sha: &str) -> &str {
     &sha[2..]

@@ -86,3 +86,16 @@ This will show the blob object in the `.git/objects` directory.
 ```sh
 83bd3630bb4c88996874d2a2ae693cc615d7fcd5
 ```
+
+### cat-file
+
+```sh
+cargo run cat-file -p 83bd3630bb4c88996874d2a2ae693cc615d7fcd5
+```
+
+This will show the content of the blob object.
+
+```sh
+hello world
+another line
+```
