@@ -8,12 +8,15 @@ pub fn hash_object(args: &[String]) {
     match args[0].as_str() {
         "-w" => {
             let filename = &args[1];
-            let file = std::fs::read(filename).unwrap();
+            let mut file = std::fs::read(filename).unwrap();
+            let header = get_header(&file);
+
+            file.extend(header.as_bytes());
+
             let sha = get_sha(&file);
+            let compressed_file = compress(&file);
 
             let folder_path = create_folder(&sha);
-
-            let compressed_file = compress(&file);
 
             print_sha(&sha);
             save_file(&compressed_file, &folder_path, get_file_sha(&sha));
@@ -56,6 +59,13 @@ fn get_file_sha(sha: &str) -> &str {
     &sha[2..]
 }
 
+fn get_header(content: &[u8]) -> String {
+    let object_type = "blob";
+    let size = content.len();
+
+    format!("{object_type} {size}\0")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -67,5 +77,14 @@ mod tests {
         let result = get_file_sha(sha);
 
         assert_eq!(result, expected_file_sha);
+    }
+
+    #[test]
+    fn should_create_blob_header() {
+        let content = "What is up, doc?";
+        let expected_result = "blob 16\0";
+        let result = get_header(content.as_bytes());
+
+        assert_eq!(result, expected_result);
     }
 }
